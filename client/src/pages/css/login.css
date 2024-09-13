@@ -1,0 +1,37 @@
+:root{
+    --blue:#1366D9;
+}
+.LoginContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5%;
+}
+.logoImage{
+    height: 30%;
+    width: 30%;
+    margin-right: 10%;
+}
+.formContainer{
+    width: 300px;
+}
+.forgot-password{
+    display: flex;
+    justify-content: end;
+    color: var(--blue);
+}
+.field{
+    padding-bottom: 7%;
+}
+input, button{
+    width: 100%;
+    padding: 1.5%;
+}
+.button{
+    border: none;
+    background-color: var(--blue);
+    color: white;
+    padding: 7px;
+    border-radius: 5px;
+    
+}
