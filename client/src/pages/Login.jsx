@@ -5,7 +5,7 @@ import "./css/login.css";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+//   const [errors, setErrors] = useState({ email: "", password: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const LoginPage = () => {
       <img src={logo} alt="Logo" className="logoImage" />
       <div className="formContainer">
         <h3>Log in to your account</h3>
-        <p>Welcome back! Please enter your details.</p>
+        <p className="greeting">Welcome back! Please enter your details.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="email" className="form">
@@ -65,7 +65,7 @@ const LoginPage = () => {
             />
             {/* {errors.password && <p className="error">{errors.password}</p>} */}
           </div>
-          <p className="field forgot-password">Forgot Password?</p>
+          <p className="field forgot-password" onClick={()=>{navigator}}>Forgot Password?</p>
           <button type="submit" className="button">
             Sign in
           </button>

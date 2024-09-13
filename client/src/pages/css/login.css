@@ -1,11 +1,16 @@
 :root{
     --blue:#1366D9;
+    --gray:#667085;
 }
 .LoginContainer{
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 5%;
+}
+.greeting{
+    color: var(--gray);
+    font-size: 14px;
 }
 .logoImage{
     height: 30%;
