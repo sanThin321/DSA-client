@@ -1,63 +1,140 @@
-import React from 'react';
- 
-const Header = () => {
+import React, { useState, useEffect } from "react";
+import "./css/Header.css";
+import closeLogo from "../assets/logo.svg";
+import {
+  FaTh,
+  FaBars,
+  FaUserAlt,
+  FaRegChartBar,
+  FaCommentAlt,
+  FaShoppingBag,
+  FaCog,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { NavLink, useLocation } from "react-router-dom";
+
+const Sidebar = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [activeItem, setActiveItem] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    // Combine both primary and bottom menu items
+    const allMenuItems = [...primaryMenu, ...bottomMenu];
+    
+    // Set the active item based on the current route
+    const path = location.pathname;
+    const currentItem = allMenuItems.find(item => item.path === path)?.name || "";
+    setActiveItem(currentItem);
+  }, [location.pathname]);
+
+  const toggle = () => setIsOpen(!isOpen);
+
+  const primaryMenu = [
+    {
+      path: "/",
+      name: "Dashboard",
+      icon: <FaTh />,
+    },
+    {
+      path: "/inventory",
+      name: "Inventory",
+      icon: <FaShoppingBag />,
+    },
+    {
+      path: "/reports",
+      name: "Reports",
+      icon: <FaRegChartBar />,
+    },
+    {
+      path: "/sales",
+      name: "Sales",
+      icon: <FaCommentAlt />,
+    },
+  ];
+
+  const bottomMenu = [
+    {
+      path: "/settings",
+      name: "Settings",
+      icon: <FaCog />,
+    },
+    {
+      path: "/logout",
+      name: "Logout",
+      icon: <FaSignOutAlt />,
+    },
+  ];
+
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="#">Navbar</a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Link</a>
-            </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Action</a></li>
-                <li><a className="dropdown-item" href="#">Another action</a></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-          <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">Search</button>
-          </form>
+    <div className="Container">
+      <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
+        <div className="logo">
+          <img src={closeLogo} alt="" />
+          <p className={`logoText ${isOpen ? "show" : "hide"}`}>4 SALE</p>
+        </div>
+        
+        {/* Primary Menu */}
+        <div className="menu-section">
+          {primaryMenu.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className={`link ${activeItem === item.name ? "active" : ""}`}
+            >
+              <div className="IconWithName">
+                <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
+                  {item.icon}
+                </div>
+                <div className={`link_text ${isOpen ? "show" : "hide"}`}>
+                  {item.name}
+                </div>
+              </div>
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Bottom Menu */}
+        <div className="bottom-section">
+          {bottomMenu.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className={`link ${activeItem === item.name ? "active" : ""}`}
+            >
+              <div className="IconWithName">
+                <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
+                  {item.icon}
+                </div>
+                <div className={`link_text ${isOpen ? "show" : "hide"}`}>
+                  {item.name}
+                </div>
+              </div>
+            </NavLink>
+          ))}
         </div>
       </div>
-    </nav>
+
+      <div className="mainContent">
+        {/* Top Bar */}
+        <div className="topBar">
+          <div className="bars">
+            <FaBars onClick={toggle} />
+          </div>
+          <div className="Active">
+            <div className="header">
+              <h2>{activeItem}</h2>
+            </div>
+          </div>
+        </div>
+
+        {/* Main content area */}
+        <div className="page-content">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default Header;
+export default Sidebar;
