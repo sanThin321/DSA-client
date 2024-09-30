@@ -4,7 +4,6 @@ import closeLogo from "../assets/logo.svg";
 import {
   FaTh,
   FaBars,
-  FaUserAlt,
   FaRegChartBar,
   FaCommentAlt,
   FaShoppingBag,
@@ -12,21 +11,13 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
+import Breadcrumb from "./Breadcrumb"
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState("");
-  const location = useLocation();
+  const [activeItem] = useState("");
+ 
 
-  useEffect(() => {
-    // Combine both primary and bottom menu items
-    const allMenuItems = [...primaryMenu, ...bottomMenu];
-    
-    // Set the active item based on the current route
-    const path = location.pathname;
-    const currentItem = allMenuItems.find(item => item.path === path)?.name || "";
-    setActiveItem(currentItem);
-  }, [location.pathname]);
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -123,7 +114,7 @@ const Sidebar = ({ children }) => {
           </div>
           <div className="Active">
             <div className="header">
-              <h2>{activeItem}</h2>
+              <Breadcrumb />
             </div>
           </div>
         </div>

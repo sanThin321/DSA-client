@@ -60,7 +60,7 @@ const Dashboard = () => {
                 Sales
               </p>
             </div>
-            <div className="line" />
+            <div className="Hline" />
             <div className="inner">
               <img src={sale2} alt="" />
               <p className="subtopic">
@@ -70,7 +70,7 @@ const Dashboard = () => {
                 Revenue
               </p>
             </div>
-            <div className="line" />
+            <div className="Hline" />
             <div className="inner">
               <img src={sale3} alt="" />
               <p className="subtopic">
@@ -80,7 +80,7 @@ const Dashboard = () => {
                 Profit
               </p>
             </div>
-            <div className="line" />
+            <div className="Hline" />
             <div className="inner">
               <img src={sale4} alt="" />
               <p className="subtopic">
@@ -226,6 +226,7 @@ const Dashboard = () => {
               show={true}
               onClose={closePopup}
               title="New Category"
+              size="small"
               content={
                 <div>
                   <form action="">
@@ -241,10 +242,10 @@ const Dashboard = () => {
                       />
                     </div>
                     <div className="Return">
-                      <button className="send cancel" type="cancel" onClick={closePopup}>
+                      <button className="send cancel re" type="cancel" onClick={closePopup}>
                         Discard
                       </button>
-                      <button className="send add" type="submit">
+                      <button className="send add re" type="submit">
                         Add Category
                       </button>
                     </div>

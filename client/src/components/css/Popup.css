@@ -16,20 +16,22 @@
     border-radius: 8px;
     padding: 20px;
     width: 60%;
-    max-height: 500px;
+    min-width: 200px;
+    max-height: 700px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
   }
-  
   .popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
+  .size{
+    width: 40%;
+  }
   .close-button {
     background: transparent;
     border: none;

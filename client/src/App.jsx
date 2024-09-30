@@ -7,7 +7,7 @@ import Reports from "./pages/Reports";
 import Sales from "./pages/Sales";
 import Settings from "./pages/Setting";
 import Logout from "./pages/Logout";
-
+import InventroryDetail from "./pages/inventoryDeatils";
 const App = () => {
   return (
     <BrowserRouter>
@@ -25,6 +25,7 @@ const HeaderWithConditionalRendering = () => {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/inventory" element={<Inventory />} />
+        <Route path="/inventory/:id" element={<InventroryDetail />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/settings" element={<Settings />} />

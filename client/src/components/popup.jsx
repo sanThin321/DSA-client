@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './css/Popup.css'; // Import CSS for styling
 
-const Popup = ({ show, onClose, title, content,hideCloseButton }) => {
+const Popup = ({ show, onClose, title,size, content,hideCloseButton }) => {
     const popupRef = useRef();
 
     const handleOutsideClick = (event) => {
@@ -23,10 +23,10 @@ const Popup = ({ show, onClose, title, content,hideCloseButton }) => {
     }, [show]);
   
     if (!show) return null;
-
+    const reSize=size==="small"
   return (
     <div className="popup-overlay">
-      <div className="popup-content">
+      <div className={`popup-content ${reSize? 'size':''}`}>
         <div className="popup-header">
           <h2>{title}</h2>
           {!hideCloseButton && (

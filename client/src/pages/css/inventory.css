@@ -1,0 +1,210 @@
+.incontainer{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 15px;
+}
+.inventory-details{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.Line{
+    height: auto;
+    width: 0.25%;
+    background-color: rgb(250, 243, 243);
+    margin: 0 2% 0 2%;
+}
+.dayandRevenue, .productandcost, .lowStock{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.Container-item{
+    background-color: white;
+    padding: 10px 10px;
+    border-radius: 7px;
+}
+.instock {
+    color: green;
+}
+  
+.outofstock {
+    color: red;
+}
+
+.lowstock {
+    color: orange;
+}
+.head th{
+    text-align: center;
+}
+.Contain{
+    cursor: pointer;
+    text-align: center;
+}
+.Btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Btn-shape{
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+.Subtopic{
+    font-size: 16px;
+    font-weight: 600;
+    &.category{
+        color: #1570EF;
+    }
+    &.product{
+        color: #E19133;
+    }
+    &.top{
+        color: #845EBC;
+    }
+    &.low{
+        color: #F36960;
+    }
+}
+.describeinN{
+    font-size: 16px;
+    font-weight: 600;
+    color: #5D6679;
+}
+.describe{
+    font-size: 14px;
+    font-weight: 400;
+    color: #858D9D;
+}
+.day,.product{
+    margin-right: 40px;
+}
+.pan{
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+.search-1{
+    align-items: center;
+}
+.search{
+    display: flex;
+    align-items: center;
+    border: 2px solid #F0F1F3;
+    padding: 0 10px;
+    border-radius: 4px;
+}
+.search-input{
+    border: 0px;
+    font-size: 16px;
+    outline: none;
+}
+.icon-search{
+    font-size: 16px;
+    font-weight:lighter;
+    color: #868788;
+    margin-right: 10px;
+}
+.filter-dropdown {
+    position: relative;
+    display: inline-block;
+}
+  
+.dropdown-tog {
+    color: #868788;
+    font-size: 16px;
+    width: 150px; /* Set the button width */
+    background: none; /* Adjust background as needed */
+    border: 2px solid #F0F1F3;
+    border-radius: 4px;
+    padding: 7px; /* Adjust padding */
+}
+.disable-dropdown-tog{
+    border: 2px solid rgb(123, 118, 118);
+}
+  
+.dropdown-men {
+    display: none; /* Hide the dropdown by default */
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    width: 150px; /* Set the dropdown width */
+}
+
+.filter-dropdown:hover .dropdown-men,
+.filter-dropdown:focus-within .dropdown-men{
+    display: block; /* Show the dropdown on hover or focus */
+}
+.filter-dropdown:hover .disable-dropdown,
+.filter-dropdown:focus-within .disable-dropdown{
+    display: none; /* Show the dropdown on hover or focus */
+}
+.image-filter{
+    margin-right: 10px;
+}
+
+.dropdown-men li {
+    font-weight: 400;
+    list-style: none;
+    font-size: 16px;
+    padding: 8px 0; /* Adjust padding for dropdown items */
+    cursor: pointer; /* Change cursor on hover */
+}
+.uploadImage {
+    height: 100px;
+    width: 100px;
+    border-radius: 6px;
+    border: 1px dashed gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#preview {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.imagefile {
+    display: none;
+}
+.Image-form{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.img-des{
+    font-size: 14px;
+    font-weight: 400;
+    color: #448DF2;
+}
+.product-field{
+    margin: 10px 2px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.field-name{
+    font-size: 16px;
+    font-weight: 500;
+}
+.product-input{
+    outline: none;
+    width: 273px;
+    font-size: 14px;
+    padding: 7px;
+    border: 1px solid #D0D5DD;
+    border-radius: 4px;
+}
+
