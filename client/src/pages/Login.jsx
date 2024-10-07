@@ -1,35 +1,16 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.svg";
 import "./css/login.css";
+import { useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
+const LoginPage = ({ onLogin }) => {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-//   const [errors, setErrors] = useState({ email: "", password: "" });
-
+const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    let hasError = false;
-    let newErrors = { email: "", password: "" };
-
-    if (!email) {
-      newErrors.email = "Email is required";
-      hasError = true;
-    
-    }
-
-    if (!password) {
-      newErrors.password = "Password is required";
-      hasError = true;
-    }
-
-    if (hasError) {
-      setErrors(newErrors);
-    } else {
-      // Handle form submission (e.g., send data to server)
-      console.log("Form submitted with:", { email, password });
-    }
+    onLogin();
+    navigate("/");
   };
 
   return (
@@ -40,14 +21,13 @@ const LoginPage = () => {
         <p className="greeting">Welcome back! Please enter your details.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
-            <label htmlFor="email" className="form">
-              Email
+            <label htmlFor="username" className="form">
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
             {/* {errors.email && <p className="error">{errors.email}</p>} */}

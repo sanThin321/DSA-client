@@ -108,6 +108,7 @@ const Inventory = () => {
   const [selectedAvailability, setSelectedAvailability] = useState(""); // New state for availability filter
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [newProduct, setNewProduct] = useState("");
 
   // Calculate current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -159,12 +160,22 @@ const Inventory = () => {
   const closePopup = () => setPopupType(null);
 
   const isPopupOpen = popupType !== null;
+  const [color, setColor] = useState("gray");
+
+  const handleChange = (event) => {
+    setColor(event.target.value === "" ? "gray" : "black");
+  };
+  const handleAddProduct = (e) => {
+    e.preventDefault();
+    setNewProduct(""); // Clear the input field
+    closePopup(); // Close the popup
+  };
   return (
     <div>
       <div className="incontainer">
         <div className="Container-item iT-1">
           <h2 className="topic">Overall Inventory</h2>
-          <div className="inventory-details">
+          <div className="inventory-detail">
             <div className="details">
               <h3 className="Subtopic category">Categories</h3>
               <p className="describeinN">14</p>
@@ -242,7 +253,7 @@ const Inventory = () => {
                   size="small"
                   content={
                     <div>
-                      <form action="">
+                      <form action="" onSubmit={handleAddProduct}>
                         <div className="Image-form">
                           <input
                             type="file"
@@ -291,12 +302,28 @@ const Inventory = () => {
                           <label htmlFor="category" className="field-name">
                             Category
                           </label>
-                          <input
+                          {/* <input
                             type="text"
                             placeholder="Select product category"
                             required
                             className="product-input"
-                          />
+                          /> */}
+                          <select
+                            name="product"
+                            id="productSelect"
+                            className="product-input selectPlaceholder"
+                            style={{ color: color }}
+                            onChange={handleChange}
+                            defaultValue=""
+                          >
+                            <option value="" disabled hidden>
+                              Select product category
+                            </option>
+                            <option value="maggi1">Maggi 1</option>
+                            <option value="maggi2">Maggi 2</option>
+                            <option value="maggi3">Maggi 3</option>
+                            <option value="maggi4">Maggi 4</option>
+                          </select>
                         </div>
                         <div className="product-field">
                           <label htmlFor="buy" className="field-name">

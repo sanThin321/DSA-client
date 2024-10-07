@@ -4,7 +4,7 @@
     grid-template-rows: auto;
     gap: 15px;
 }
-.inventory-details{
+.inventory-detail{
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -206,5 +206,20 @@
     padding: 7px;
     border: 1px solid #D0D5DD;
     border-radius: 4px;
+    appearance: none;
 }
+.selectPlaceholder{
+    color: #717171;
+}
+.selectPlaceholder:focus:valid, .product-input:valid {
+    color: #000; /* Change text color to black */
+  }
+.selectPlaceholder option[disabled] {
+    color: #888; /* Gray out the placeholder text */
+  }
+  
+  /* Normal option styling */
+  .selectPlaceholder option {
+    color: #000; /* Text color of other options */
+  }
 

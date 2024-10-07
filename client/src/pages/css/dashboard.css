@@ -70,6 +70,10 @@
     &.Button{
         align-items: baseline;
     }
+    &.over{
+        align-items:flex-start;
+        margin-bottom: 25px;
+    }
     
 }
 .subtopic{

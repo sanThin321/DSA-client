@@ -40,10 +40,17 @@ const Dashboard = () => {
     setCategories(updatedCategories);
   };
   const [popupType, setPopupType] = useState(null);
-
+  const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
-
+  const handleAddCategory = (e) => {
+    e.preventDefault();
+    if (newCategory && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]); // Add the new category
+      setNewCategory(""); // Clear the input field
+      closePopup(); // Close the popup
+    }
+  };
   const isPopupOpen = popupType !== null;
   return (
     <div>
@@ -219,7 +226,13 @@ const Dashboard = () => {
         </div>
         <div className="grid-item item4">
           <h2 className={`topic Button ${isPopupOpen ? "" : "Scroll"}`}>
-            Categories <span className="addButton"onClick={() => openPopup("addCategory")}>Add Category</span>
+            Categories{" "}
+            <span
+              className="addButton"
+              onClick={() => openPopup("addCategory")}
+            >
+              Add Category
+            </span>
           </h2>
           {popupType === "addCategory" && (
             <Popup
@@ -229,20 +242,24 @@ const Dashboard = () => {
               size="small"
               content={
                 <div>
-                  <form action="">
+                  <form action="" onSubmit={handleAddCategory}>
                     <div className="form">
-                      <label htmlFor="" className="label">
-                        Category Name
-                      </label>
+                      <label className="label">Category Name</label>
                       <input
-                        className="input"
                         type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
                         placeholder="Enter category name"
                         required
+                        className="input"
                       />
                     </div>
                     <div className="Return">
-                      <button className="send cancel re" type="cancel" onClick={closePopup}>
+                      <button
+                        className="send cancel re"
+                        type="cancel"
+                        onClick={closePopup}
+                      >
                         Discard
                       </button>
                       <button className="send add re" type="submit">
@@ -251,7 +268,6 @@ const Dashboard = () => {
                     </div>
                   </form>
                 </div>
-                
               }
               hideCloseButton={true}
             />
