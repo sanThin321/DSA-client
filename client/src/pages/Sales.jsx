@@ -9,6 +9,7 @@ const Sales = () => {
       id: 213,
       customername: "Sangay Thinley",
       customercontact: 77615421,
+      payment:"Credit card",
       amount: 500,
       date: "11/12/22",
       jrnl: 3444386,
@@ -17,6 +18,7 @@ const Sales = () => {
       id: 214,
       customername: "Tenzin Wangchuk",
       customercontact: 77615422,
+      payment:"Credit card",
       amount: 700,
       date: "12/12/22",
       jrnl: 3444387,
@@ -148,6 +150,7 @@ const Sales = () => {
               <th>Sale Id</th>
               <th>Customer Name</th>
               <th>Customer Contact No</th>
+              <th>PaymentMethod</th>
               <th>Total Amount BTN</th>
               <th>Date</th>
               <th>Jrnl. No</th>
@@ -180,6 +183,14 @@ const Sales = () => {
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       {product.customercontact}
+                    </NavLink>
+                  </td>
+                  <td>
+                    <NavLink
+                      to={`/sales/${product.id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {product.payment}
                     </NavLink>
                   </td>
                   <td>
