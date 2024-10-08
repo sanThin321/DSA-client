@@ -1,0 +1,27 @@
+.overall, .salesadd{
+    background-color: white;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 2%;
+    padding: 0 10px;
+}
+.revenue_detail{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.revenue_T{
+    font-size: 16px;
+    font-weight: 600;
+    color: #E19133;
+}
+.revenue_V{
+    font-size: 16px;
+    font-weight: 600;
+    color: #5D6679;
+}
+.moment{
+    font-size: 14px;
+    font-weight: 400;
+    color: #858D9D;
+}

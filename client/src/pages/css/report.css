@@ -1,0 +1,54 @@
+.report{
+    display: grid;
+    grid-template-columns:  48.5% 48.5%;
+    justify-content: space-between;
+    margin-bottom: 2%;
+    @media screen and (max-width: 768px) {
+        &{
+          grid-template-columns: 1fr; /* Single column layout for small screens */
+          grid-template-rows: auto auto auto auto; /* Stack all the items */
+          gap: 10px;
+        }
+    }
+}
+.view_details{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.bsale{
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 40px;
+}
+.view, .best, .profit,.selling{
+    background-color: white;
+    border-radius: 4px;
+    padding: 10px 7px;
+}
+.profit{
+    margin-bottom: 2%;
+}
+.des{
+    font-size: 14px;
+    color: #667085;
+    font-weight: 400;
+}
+.totalP{
+    font-size: 14px;
+    color: #555555;
+    font-weight: 400;
+}
+.Revenue{
+    font-size: 14px;
+    font-weight: 400;
+    color: #DBA362;
+}
+.sale{
+    font-size: 14px;
+    font-weight: 400;
+    color: #845EBC;
+}
+.selling{
+    max-height: 370px;
+}

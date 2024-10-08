@@ -1,0 +1,6 @@
+.saleInfo{
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 10px 7px;
+    background-color: white;
+}

@@ -9,6 +9,8 @@ import Sales from "./pages/Sales";
 import Settings from "./pages/Setting";
 import Logout from "./pages/Logout";
 import InventroryDetail from "./pages/inventoryDeatils";
+import SalesInfo from "./pages/SaleInfo";
+import AddSales from "./pages/addSales";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication
@@ -47,8 +49,10 @@ const HeaderWithConditionalRendering = ({ isAuthenticated, setIsAuthenticated })
         <Route path="/inventory/:id" element={<InventroryDetail />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/sales" element={<Sales />} />
+        <Route path="/sales/:id" element={<SalesInfo />} />
+        <Route path="/sales/add-sale" element={<AddSales />}/>
         <Route path="/settings" element={<Settings />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/logout" element={<Logout setIsAuthenticated={setIsAuthenticated} />} />
       </Routes>
     </Sidebar>
   );
