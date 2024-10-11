@@ -28,7 +28,7 @@
 .field{
     padding-bottom: 7%;
 }
-input, button{
+input, .login-button{
     width: 100%;
     padding: 1.5%;
     outline: none;

@@ -11,13 +11,14 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
-import Breadcrumb from "./Breadcrumb"
+import Breadcrumb from "./Breadcrumb";
+import { useAuth } from "../auth/auth";
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeItem] = useState("");
- 
 
+  const { LogoutUser } = useAuth();
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -51,9 +52,9 @@ const Sidebar = ({ children }) => {
       icon: <FaCog />,
     },
     {
-      path: "/logout",
       name: "Logout",
       icon: <FaSignOutAlt />,
+      onClick: LogoutUser,
     },
   ];
 
@@ -64,7 +65,7 @@ const Sidebar = ({ children }) => {
           <img src={closeLogo} alt="" />
           <p className={`logoText ${isOpen ? "show" : "hide"}`}>4 SALE</p>
         </div>
-        
+
         {/* Primary Menu */}
         <div className="menu-section">
           {primaryMenu.map((item, index) => (
@@ -87,22 +88,40 @@ const Sidebar = ({ children }) => {
 
         {/* Bottom Menu */}
         <div className="bottom-section">
-          {bottomMenu.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              className={`link ${activeItem === item.name ? "active" : ""}`}
-            >
-              <div className="IconWithName">
-                <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
-                  {item.icon}
+          {bottomMenu.map((item, index) =>
+            item.path ? (
+              <NavLink
+                to={item.path}
+                key={index}
+                className={`link ${activeItem === item.name ? "active" : ""}`}
+              >
+                <div className="IconWithName">
+                  <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
+                    {item.icon}
+                  </div>
+                  <div className={`link_text ${isOpen ? "show" : "hide"}`}>
+                    {item.name}
+                  </div>
                 </div>
-                <div className={`link_text ${isOpen ? "show" : "hide"}`}>
-                  {item.name}
+              </NavLink>
+            ) : (
+              <div
+                key={index}
+                className={`link ${activeItem === item.name ? "active" : ""}`}
+                onClick={item.onClick}
+                style={{cursor: "pointer"}}
+              >
+                <div className="IconWithName">
+                  <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
+                    {item.icon}
+                  </div>
+                  <div className={`link_text ${isOpen ? "show" : "hide"}`}>
+                    {item.name}
+                  </div>
                 </div>
               </div>
-            </NavLink>
-          ))}
+            )
+          )}
         </div>
       </div>
 
@@ -120,9 +139,7 @@ const Sidebar = ({ children }) => {
         </div>
 
         {/* Main content area */}
-        <div className="page-content">
-          {children}
-        </div>
+        <div className="page-content">{children}</div>
       </div>
     </div>
   );

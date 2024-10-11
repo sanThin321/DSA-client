@@ -1,128 +1,65 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./css/inventory.css";
 import "./css/dashboard.css";
 import { FaSearch } from "react-icons/fa";
 import filter from "../assets/filter.svg";
 import Popup from "../components/popup";
 import { NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useAuth } from "../auth/auth";
+import defaultImage from "../assets/image.gif";
+import loadingImage from "../assets/loadingdots2.gif";
+
 const Inventory = () => {
-  const productsData = [
-    {
-      product: "Maggi",
-      price: 430,
-      quantity: "43 Packets",
-      threshold: "12 Packets",
-      expiry: "11/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Picpic",
-      price: 257,
-      quantity: "22 Packets",
-      threshold: "12 Packets",
-      expiry: "21/12/22",
-      availability: "Out of stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Red Bull",
-      price: 405,
-      quantity: "36 Packets",
-      threshold: "9 Packets",
-      expiry: "5/12/22",
-      availability: "In-stock",
-    },
-    {
-      product: "Coca cola",
-      price: 205,
-      quantity: "41 Packets",
-      threshold: "10 Packets",
-      expiry: "11/11/22",
-      availability: "Low stock",
-    },
-  ];
+  const navigate = useNavigate();
+  const { authorizationToken } = useAuth();
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedAvailability, setSelectedAvailability] = useState(""); // New state for availability filter
+  const [selectedAvailability, setSelectedAvailability] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [newProduct, setNewProduct] = useState("");
+  const [product, setProduct] = useState({
+    name: "",
+    quantity: 0,
+    unit: "",
+    price: 0,
+    category: "",
+    thresholdValue: 0,
+    expirationDate: "",
+    productAvailable: true,
+  });
+
+  const [image, setImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl(null);
+    }
+  };
 
   // Calculate current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   // Filter products based on search term and availability filter
-  const filteredProducts = productsData
-    .filter((product) =>
-      product.product.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products
+    .filter((p) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((product) =>
-      selectedAvailability
-        ? product.availability === selectedAvailability
-        : true
+    .filter((p) =>
+      selectedAvailability ? p.productAvailable === selectedAvailability : true
     );
 
   // Get current page items after filtering
@@ -145,15 +82,6 @@ const Inventory = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl); // Update state with the new image URL
-    }
-  };
   const [popupType, setPopupType] = useState(null);
 
   const openPopup = (type) => setPopupType(type);
@@ -162,14 +90,62 @@ const Inventory = () => {
   const isPopupOpen = popupType !== null;
   const [color, setColor] = useState("gray");
 
-  const handleChange = (event) => {
-    setColor(event.target.value === "" ? "gray" : "black");
-  };
-  const handleAddProduct = (e) => {
+  // add product
+  const handleAddProduct = async (e) => {
     e.preventDefault();
-    setNewProduct(""); // Clear the input field
-    closePopup(); // Close the popup
+
+    const formData = new FormData();
+    formData.append("imageFile", image);
+    formData.append(
+      "product",
+      new Blob([JSON.stringify(product)], { type: "application/json" })
+    );
+
+    try {
+      const request = await axios.post(
+        "http://localhost:8081/api/product",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (request.status === 201) {
+        toast.success("Product added successfully.");
+        getAllProducts();
+      }
+    } catch (error) {
+      toast.error("Error adding product.");
+    }
+    closePopup();
   };
+
+  // get all products
+
+  const getAllProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/api/products", {
+        headers: {
+          Authorization: authorizationToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setProducts(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      toast.error("Could not fetch products.");
+    }
+  };
+
+  useEffect(() => {
+    getAllProducts();
+  }, []);
+
   return (
     <div>
       <div className="incontainer">
@@ -253,25 +229,31 @@ const Inventory = () => {
                   size="small"
                   content={
                     <div>
-                      <form action="" onSubmit={handleAddProduct}>
+                      <form onSubmit={handleAddProduct}>
                         <div className="Image-form">
                           <input
                             type="file"
                             id="file"
                             className="imagefile"
                             accept="image/*"
+                            // onChange={handleImageChange}
                             onChange={handleImageChange}
                             required
                           />
                           <label htmlFor="file" className="uploadImage">
-                            {imagePreview ? (
+                            {previewUrl ? (
                               <img
                                 id="preview"
-                                src={imagePreview}
+                                src={previewUrl}
                                 alt="Selected"
+                                className="fit-image"
                               />
                             ) : (
-                              ""
+                              <img
+                                src={defaultImage}
+                                alt="Default"
+                                className="fit-image"
+                              /> // Use the imported default image
                             )}
                           </label>
                           <span className="img-des">Browse image</span>
@@ -281,59 +263,49 @@ const Inventory = () => {
                             Product Name
                           </label>
                           <input
+                            name="name"
+                            value={product.name}
                             type="text"
                             placeholder="Enter product name"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
-                        <div className="product-field">
-                          <label htmlFor="Product-id" className="field-name">
-                            Product ID
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Enter product ID"
-                            required
-                            className="product-input"
-                          />
-                        </div>
+
                         <div className="product-field">
                           <label htmlFor="category" className="field-name">
                             Category
                           </label>
-                          {/* <input
-                            type="text"
-                            placeholder="Select product category"
-                            required
-                            className="product-input"
-                          /> */}
                           <select
-                            name="product"
-                            id="productSelect"
                             className="product-input selectPlaceholder"
-                            style={{ color: color }}
-                            onChange={handleChange}
-                            defaultValue=""
+                            value={product.category}
+                            onChange={handleInputChange}
+                            name="category"
+                            id="category"
                           >
-                            <option value="" disabled hidden>
-                              Select product category
-                            </option>
-                            <option value="maggi1">Maggi 1</option>
-                            <option value="maggi2">Maggi 2</option>
-                            <option value="maggi3">Maggi 3</option>
-                            <option value="maggi4">Maggi 4</option>
+                            <option value="">Select category</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Headphone">Headphone</option>
+                            <option value="Mobile">Mobile</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Toys">Toys</option>
+                            <option value="Fashion">Fashion</option>
                           </select>
                         </div>
+
                         <div className="product-field">
                           <label htmlFor="buy" className="field-name">
                             Buying Price
                           </label>
                           <input
-                            type="text"
+                            name="price"
+                            value={product.price}
+                            type="number"
                             placeholder="Enter buying price"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
                         <div className="product-field">
@@ -341,10 +313,13 @@ const Inventory = () => {
                             Quantity
                           </label>
                           <input
+                            name="quantity"
+                            value={product.quantity}
                             type="text"
                             placeholder="Enter product quantity"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
                         <div className="product-field">
@@ -352,10 +327,13 @@ const Inventory = () => {
                             Unit
                           </label>
                           <input
+                            name="unit"
+                            value={product.unit}
                             type="text"
                             placeholder="Enter product unit"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
                         <div className="product-field">
@@ -363,10 +341,13 @@ const Inventory = () => {
                             Expiry Date
                           </label>
                           <input
-                            type="text"
+                            name="expirationDate"
+                            value={product.expirationDate}
+                            type="date"
                             placeholder="Enter expiry date"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
                         <div className="product-field">
@@ -374,10 +355,13 @@ const Inventory = () => {
                             Threshold Value
                           </label>
                           <input
-                            type="text"
+                            name="thresholdValue"
+                            type="number"
+                            value={product.thresholdValue}
                             placeholder="Enter threshold value"
                             required
                             className="product-input"
+                            onChange={handleInputChange}
                           />
                         </div>
 
@@ -445,6 +429,7 @@ const Inventory = () => {
           <table>
             <thead className="head">
               <tr>
+                <th>Image</th>
                 <th>Products</th>
                 <th>Buying Price BTN</th>
                 <th>Quantity</th>
@@ -456,69 +441,57 @@ const Inventory = () => {
             <tbody className="Contain">
               {currentItems.length > 0 ? (
                 currentItems.map((product, index) => (
-                  <tr key={index}>
-                    {/* Each cell should be wrapped individually in NavLink */}
-                    <td>
-                      <NavLink
-                        to={`/inventory/${product.product}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
+                  <tr
+                    key={index}
+                    onClick={() => navigate(`/inventory/${product.productId}`)}
+                    style={{ cursor: "pointer" }}
+                    className="on-hover"
+                  >
+                    
+                    <td style={{ textAlign: "center" }}>
+                      {" "}
+                      {/* Center the image */}
+                      <div
+                        style={{ display: "flex", justifyContent: "center" }}
                       >
-                        {product.product}
-                      </NavLink>
+                        <img
+                          src={`data:image/jpeg;base64,${product.imageData}`}
+                          loading="lazy"
+                          alt="Product"
+                          width={40}
+                          height={40} 
+                        />
+                      </div>
                     </td>
                     <td>
                       <NavLink
-                        to={`/inventory/${product.product}`}
+                        to={`/inventory/${product.name}`}
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
-                        {product.price}
+                        {product.name}
                       </NavLink>
                     </td>
-                    <td>
-                      <NavLink
-                        to={`/inventory/${product.product}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        {product.quantity}
-                      </NavLink>
-                    </td>
-                    <td>
-                      <NavLink
-                        to={`/inventory/${product.product}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        {product.threshold}
-                      </NavLink>
-                    </td>
-                    <td>
-                      <NavLink
-                        to={`/inventory/${product.product}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        {product.expiry}
-                      </NavLink>
-                    </td>
+                    <td>{product.price}</td>
+                    <td>{product.quantity}</td>
+                    <td>{product.thresholdValue}</td>
+                    <td>{product.expirationDate}</td>
                     <td
                       className={
-                        product.availability === "In-stock"
-                          ? "instock"
-                          : product.availability === "Out of stock"
-                          ? "outofstock"
-                          : "lowstock"
+                        product.productAvailable ? "instock" : "outofstock"
                       }
                     >
-                      <NavLink
-                        to={`/inventory/${product.product}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        {product.availability}
-                      </NavLink>
+                      {product.productAvailable ? "Available" : "Out of stock"}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">No products found</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <img src={loadingImage} height={200} />
+                  </td>
                 </tr>
               )}
             </tbody>

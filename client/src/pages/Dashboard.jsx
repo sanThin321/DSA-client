@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./css/dashboard.css";
 import sale1 from "../assets/sale1.svg";
 import sale2 from "../assets/sale2.svg";
@@ -10,7 +10,12 @@ import junk2 from "../assets/junk1.svg";
 import junk3 from "../assets/junk1.svg";
 import BarChart from "../components/barChart";
 import Popup from "../components/popup";
+import axios from "axios";
+import { useAuth } from "../auth/auth";
+import { toast } from "react-toastify";
+
 const Dashboard = () => {
+  const { authorizationToken } = useAuth();
   const data = [
     { name: "Surf Excel", sold: 30, remaining: 12, price: "BTN 100" },
     { name: "Rin", sold: 21, remaining: 15, price: "BTN 207" },
@@ -21,36 +26,85 @@ const Dashboard = () => {
     { name: "Lays", quantity: "15 Packet", status: "Low", img: junk2 },
     { name: "Lays", quantity: "15 Packet", status: "Low", img: junk3 },
   ];
-  const [categories, setCategories] = useState([
-    "Vegetable",
-    "Instant Food",
-    "Household",
-    "Fruit",
-    "Fruit",
-    "Fruit",
-    "Fruit",
-    "Fruit",
-  ]);
+  const [categories, setCategories] = useState([]);
 
   // Function to delete a category by index
-  const handleDelete = (indexToDelete) => {
-    const updatedCategories = categories.filter(
-      (_, index) => index !== indexToDelete
-    );
-    setCategories(updatedCategories);
+  const handleDelete = async (id) => {
+    try {
+      const request = await axios.delete(
+        `http://localhost:8081/api/category/${id}`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (request.status === 200) {
+        toast.success("Category deleted successfully.")
+        getCategories();
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
   const [popupType, setPopupType] = useState(null);
   const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
-  const handleAddCategory = (e) => {
-    e.preventDefault();
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]); // Add the new category
-      setNewCategory(""); // Clear the input field
-      closePopup(); // Close the popup
+
+  // get categories
+  const getCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/api/categories", {
+        headers: {
+          Authorization: authorizationToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setCategories(response.data);
+      }
+    } catch (error) {
+      console.error(error.message);
     }
   };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    const category = { name: newCategory };
+
+    if (category.name === "") {
+      toast.error("Category name cannot be empty.")
+      return;
+    } 
+
+    try {
+      const request = await axios.post(
+        "http://localhost:8081/api/addCategory",
+        category,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (request.status === 201) {
+        toast.success("Category added successfully.")
+        setNewCategory("")
+        closePopup();
+        getCategories();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const isPopupOpen = popupType !== null;
   return (
     <div>
@@ -242,7 +296,7 @@ const Dashboard = () => {
               size="small"
               content={
                 <div>
-                  <form action="" onSubmit={handleAddCategory}>
+                  <form onSubmit={handleAddCategory}>
                     <div className="form">
                       <label className="label">Category Name</label>
                       <input
@@ -283,9 +337,9 @@ const Dashboard = () => {
                 <li key={index}>
                   <div className="line"></div>
                   <div className="category-item">
-                    <span>{category}</span>
+                    <span>{category.name}</span>
                     <span
-                      onClick={() => handleDelete(index)}
+                      onClick={() => handleDelete(category.categoryId)}
                       className="delete-Button"
                     >
                       Delete
