@@ -11,6 +11,7 @@ import axios from "axios";
 import { useAuth } from "../auth/auth";
 import defaultImage from "../assets/image.gif";
 import loadingImage from "../assets/loadingdots2.gif";
+import formatDate from "../utils/FormateDate";
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -474,7 +475,7 @@ const Inventory = () => {
                     <td>{product.price}</td>
                     <td>{product.quantity}</td>
                     <td>{product.thresholdValue}</td>
-                    <td>{product.expirationDate}</td>
+                    <td>{formatDate(product.expirationDate)}</td>
                     <td
                       className={
                         product.productAvailable ? "instock" : "outofstock"

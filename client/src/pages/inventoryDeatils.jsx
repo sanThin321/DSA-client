@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../auth/auth";
 import loadingImage from "../assets/loadingdots2.gif";
+import formatDate from "../utils/FormateDate";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -65,11 +66,14 @@ const ProductDetail = () => {
   // delete products
   const deletProduct = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8081/api/product/${id}`, {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
+      const response = await axios.delete(
+        `http://localhost:8081/api/product/${id}`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Product deleted successfully.");
@@ -268,8 +272,11 @@ const ProductDetail = () => {
               </li>
               <li className="detail">
                 Expiry Date
-                <span className="detailsValue">{product.expirationDate}</span>
+                <span className="detailsValue">
+                  {formatDate(product.expirationDate)}
+                </span>
               </li>
+
               <li className="detail">
                 Threshold Value
                 <span className="detailsValue">{product.thresholdValue}</span>
