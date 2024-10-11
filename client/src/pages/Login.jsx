@@ -49,6 +49,7 @@ const LoginPage = ({ onLogin }) => {
               Username
             </label>
             <input
+            
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
