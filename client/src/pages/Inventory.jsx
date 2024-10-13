@@ -12,11 +12,12 @@ import { useAuth } from "../auth/auth";
 import defaultImage from "../assets/image.gif";
 import loadingImage from "../assets/loadingdots2.gif";
 import formatDate from "../utils/FormateDate";
+import { useStore } from "../context/Store";
 
 const Inventory = () => {
+  const {products, refreshProducts, categories, refreshCategory} = useStore();
   const navigate = useNavigate();
   const { authorizationToken } = useAuth();
-  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAvailability, setSelectedAvailability] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,7 +117,7 @@ const Inventory = () => {
 
       if (request.status === 201) {
         toast.success("Product added successfully.");
-        getAllProducts();
+        refreshProducts();
       }
     } catch (error) {
       toast.error("Error adding product.");
@@ -124,29 +125,12 @@ const Inventory = () => {
     closePopup();
   };
 
-  // get all products
-
-  const getAllProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/api/products", {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
-
-      if (response.status === 200) {
-        setProducts(response.data);
-        console.log(response.data);
-      }
-    } catch (error) {
-      toast.error("Could not fetch products.");
-    }
-  };
 
   useEffect(() => {
-    getAllProducts();
+    refreshProducts();
+    refreshCategory();  
   }, []);
-
+  
   return (
     <div>
       <div className="incontainer">
@@ -286,12 +270,11 @@ const Inventory = () => {
                             id="category"
                           >
                             <option value="">Select category</option>
-                            <option value="Laptop">Laptop</option>
-                            <option value="Headphone">Headphone</option>
-                            <option value="Mobile">Mobile</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Toys">Toys</option>
-                            <option value="Fashion">Fashion</option>
+                            {
+                              categories.map((category) => {
+                                return <option value={category.name}>{category.name}</option>
+                              })
+                            }   
                           </select>
                         </div>
 

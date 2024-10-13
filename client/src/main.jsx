@@ -6,24 +6,27 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./auth/auth.jsx";
+import { StoreProvider } from "./context/Store.jsx";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
-    <StrictMode>
-      <App />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={2500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        bodyClassName="toastBody"
-      />
-    </StrictMode>
+    <StoreProvider>
+      <StrictMode>
+        <App />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          bodyClassName="toastBody"
+        />
+      </StrictMode>
+    </StoreProvider>
   </AuthProvider>
 );

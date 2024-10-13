@@ -13,9 +13,12 @@ import Popup from "../components/popup";
 import axios from "axios";
 import { useAuth } from "../auth/auth";
 import { toast } from "react-toastify";
+import { useStore } from "../context/Store";
 
 const Dashboard = () => {
   const { authorizationToken } = useAuth();
+  const { categories, refreshCategory } = useStore();
+
   const data = [
     { name: "Surf Excel", sold: 30, remaining: 12, price: "BTN 100" },
     { name: "Rin", sold: 21, remaining: 15, price: "BTN 207" },
@@ -26,7 +29,6 @@ const Dashboard = () => {
     { name: "Lays", quantity: "15 Packet", status: "Low", img: junk2 },
     { name: "Lays", quantity: "15 Packet", status: "Low", img: junk3 },
   ];
-  const [categories, setCategories] = useState([]);
 
   // Function to delete a category by index
   const handleDelete = async (id) => {
@@ -41,37 +43,21 @@ const Dashboard = () => {
       );
 
       if (request.status === 200) {
-        toast.success("Category deleted successfully.")
-        getCategories();
+        toast.success("Category deleted successfully.");
+        refreshCategory();
       }
     } catch (error) {
       console.error(error.message);
     }
   };
+
   const [popupType, setPopupType] = useState(null);
   const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
 
-  // get categories
-  const getCategories = async () => {
-    try {
-      const response = await axios.get("http://localhost:8081/api/categories", {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
-
-      if (response.status === 200) {
-        setCategories(response.data);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
   useEffect(() => {
-    getCategories();
+    refreshCategory();
   }, []);
 
   const handleAddCategory = async (e) => {
@@ -79,9 +65,9 @@ const Dashboard = () => {
     const category = { name: newCategory };
 
     if (category.name === "") {
-      toast.error("Category name cannot be empty.")
+      toast.error("Category name cannot be empty.");
       return;
-    } 
+    }
 
     try {
       const request = await axios.post(
@@ -95,10 +81,10 @@ const Dashboard = () => {
       );
 
       if (request.status === 201) {
-        toast.success("Category added successfully.")
-        setNewCategory("")
+        toast.success("Category added successfully.");
+        setNewCategory("");
         closePopup();
-        getCategories();
+        refreshCategory();
       }
     } catch (error) {
       toast.error(error.message);

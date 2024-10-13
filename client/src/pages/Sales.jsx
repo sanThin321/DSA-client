@@ -4,7 +4,8 @@ import filter from "../assets/filter.svg";
 import "./css/sale.css";
 import { NavLink } from "react-router-dom";
 const Sales = () => {
-  const productsData = [
+
+ const productsData = [
     {
       id: 213,
       customername: "Sangay Thinley",
@@ -42,10 +43,12 @@ const Sales = () => {
       return valueToFilter.includes(searchTerm.toLowerCase());
     }
   });
+
   const currentItems = filteredProducts.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
+
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -58,6 +61,7 @@ const Sales = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+
   const columnMapping = {
     "":"Filter",
     id: "Sale Id",
@@ -67,6 +71,8 @@ const Sales = () => {
     date: "Date",
     jrnl: "Journal No",
   };
+
+
   return (
     <div>
       <div className="overall">
