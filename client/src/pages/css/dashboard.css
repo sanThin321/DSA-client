@@ -219,18 +219,19 @@ tbody tr:last-child td {
     display: flex;
     justify-content: end;
     font-size: 14px;
-    gap: 50px;
+    gap: 30px;
     .send{
         width: 20%;
         border: 1px solid;
-        padding: 7px 13px;
+        padding: 7px 10px;
         border-radius: 5px;
         &.re{
-            width: 25%;
+            width: 27%;
         }
         &.cancel{
             cursor: pointer;
             color: #858D9D;
+            background-color: white;
             border-color: #858D9D;
         }
         &.add{

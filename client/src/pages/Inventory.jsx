@@ -15,7 +15,7 @@ import formatDate from "../utils/FormateDate";
 import { useStore } from "../context/Store";
 
 const Inventory = () => {
-  const {products, refreshProducts, categories, refreshCategory} = useStore();
+  const { products, refreshProducts, categories, refreshCategory } = useStore();
   const navigate = useNavigate();
   const { authorizationToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,7 +95,38 @@ const Inventory = () => {
   // add product
   const handleAddProduct = async (e) => {
     e.preventDefault();
-
+    if (!product.name.trim()) {
+      toast.error("Product name is required!");
+      return;
+    }
+    if (!product.quantity || product.quantity <= 0) {
+      toast.error("Quantity must be greater than 0!");
+      return;
+    }
+    if (!product.unit.trim()) {
+      toast.error("Unit is required!");
+      return;
+    }
+    if (!product.price || product.price <= 0) {
+      toast.error("Price must be greater than 0!");
+      return;
+    }
+    if (!product.category.trim()) {
+      toast.error("Category is required!");
+      return;
+    }
+    if (!product.thresholdValue || product.thresholdValue <= 0) {
+      toast.error("Threshold value must be greater than 0!");
+      return;
+    }
+    if (!product.expirationDate.trim()) {
+      toast.error("Expiration date is required!");
+      return;
+    }
+    if (!image) {
+      toast.error("Product image is required!");
+      return;
+    }
     const formData = new FormData();
     formData.append("imageFile", image);
     formData.append(
@@ -125,12 +156,11 @@ const Inventory = () => {
     closePopup();
   };
 
-
   useEffect(() => {
     refreshProducts();
-    refreshCategory();  
+    refreshCategory();
   }, []);
-  
+
   return (
     <div>
       <div className="incontainer">
@@ -223,7 +253,6 @@ const Inventory = () => {
                             accept="image/*"
                             // onChange={handleImageChange}
                             onChange={handleImageChange}
-                            required
                           />
                           <label htmlFor="file" className="uploadImage">
                             {previewUrl ? (
@@ -252,7 +281,6 @@ const Inventory = () => {
                             value={product.name}
                             type="text"
                             placeholder="Enter product name"
-                            required
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -270,11 +298,13 @@ const Inventory = () => {
                             id="category"
                           >
                             <option value="">Select category</option>
-                            {
-                              categories.map((category) => {
-                                return <option value={category.name}>{category.name}</option>
-                              })
-                            }   
+                            {categories.map((category) => {
+                              return (
+                                <option value={category.name}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
 
@@ -287,7 +317,6 @@ const Inventory = () => {
                             value={product.price}
                             type="number"
                             placeholder="Enter buying price"
-                            required
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -301,7 +330,6 @@ const Inventory = () => {
                             value={product.quantity}
                             type="text"
                             placeholder="Enter product quantity"
-                            required
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -315,7 +343,6 @@ const Inventory = () => {
                             value={product.unit}
                             type="text"
                             placeholder="Enter product unit"
-                            required
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -329,7 +356,6 @@ const Inventory = () => {
                             value={product.expirationDate}
                             type="date"
                             placeholder="Enter expiry date"
-                            required
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -343,7 +369,7 @@ const Inventory = () => {
                             type="number"
                             value={product.thresholdValue}
                             placeholder="Enter threshold value"
-                            required
+
                             className="product-input"
                             onChange={handleInputChange}
                           />
@@ -431,7 +457,6 @@ const Inventory = () => {
                     style={{ cursor: "pointer" }}
                     className="on-hover"
                   >
-                    
                     <td style={{ textAlign: "center" }}>
                       {" "}
                       {/* Center the image */}
@@ -443,7 +468,7 @@ const Inventory = () => {
                           loading="lazy"
                           alt="Product"
                           width={40}
-                          height={40} 
+                          height={40}
                         />
                       </div>
                     </td>

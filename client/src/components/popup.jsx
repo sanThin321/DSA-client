@@ -28,7 +28,7 @@ const Popup = ({ show, onClose, title,size, content,hideCloseButton }) => {
     <div className="popup-overlay">
       <div className={`popup-content ${reSize? 'size':''}`}>
         <div className="popup-header">
-          <h2>{title}</h2>
+          <h2 className='popupTitle'>{title}</h2>
           {!hideCloseButton && (
             <span className="close-button" onClick={onClose}>
               &#10005; {/* Close icon */}

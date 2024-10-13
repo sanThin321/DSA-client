@@ -150,7 +150,7 @@ const AddSales = () => {
             />
           </div>
           <div>
-            <label>Date</label>
+            <label>Date</label><br />
             <input
               type="date"
               value={date}
@@ -204,7 +204,7 @@ const AddSales = () => {
                   >
                     <option value="">Select Product</option>
                     {products.map((product) => (
-                      <option key={product.productId} value={product.productId}>
+                      <option className="opition_p" key={product.productId} value={product.productId}>
                         {product.name}
                       </option>
                     ))}
