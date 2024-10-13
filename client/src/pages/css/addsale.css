@@ -22,9 +22,14 @@
     padding: 10px 7px;
     border-radius: 4px;
 }
-tbody input{
+tbody input,tbody select{
     border: none;
     background-color: transparent;
+    appearance: none;
+    outline: none;
+}
+tbody select{
+    padding: 0 10px;
 }
 .products_section {
     background-color: #F0F1F3;

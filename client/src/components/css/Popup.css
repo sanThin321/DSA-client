@@ -30,7 +30,7 @@
     align-items: center;
   }
   .size{
-    width: 40%;
+    width: 37%;
   }
   .close-button {
     background: transparent;
@@ -42,4 +42,8 @@
   .popup-body {
     margin-top: 10px;
   }
-  
+  .popupTitle{
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
