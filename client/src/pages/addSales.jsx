@@ -30,11 +30,24 @@ const AddSales = () => {
 
   const handleSaleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "quantity" && value < 1) return; // Prevent invalid quantity
-    setSale((prevSale) => ({
-      ...prevSale,
-      [name]: value,
-    }));
+
+    // Prevent quantity from being less than 1
+    if (name === "quantity" && value < 1) return;
+
+    // Update sale details
+    setSale((prevSale) => {
+      const updatedSale = {
+        ...prevSale,
+        [name]: value,
+      };
+
+      // Calculate total price immediately based on the entered quantity
+      if (name === "quantity" && selectedProduct) {
+        updatedSale.totalPrice = value * selectedProduct.price;
+      }
+
+      return updatedSale;
+    });
   };
 
   // Update total price when quantity or selected product changes
@@ -47,6 +60,9 @@ const AddSales = () => {
       }));
     }
   }, [sale.quantity, selectedProduct]);
+  useEffect(() => {
+    calculateNetTotal(); // This will ensure it recalculates whenever sale or sales change
+  }, [sale, sales]);
 
   const addSaleToList = () => {
     if (selectedProduct && sale.quantity > 0) {
@@ -56,7 +72,8 @@ const AddSales = () => {
           name: selectedProduct.name,
         },
         quantity: sale.quantity,
-        totalPrice: sale.totalPrice,
+        price: selectedProduct.price,
+        totalPrice: sale.quantity * selectedProduct.price,
       };
 
       setSales((prevSales) => [...prevSales, newSale]);
@@ -70,12 +87,18 @@ const AddSales = () => {
       });
       setSelectedProduct(null); // Clear selected product
     } else {
-      alert("Please complete all product details before adding.");
+      toast.warning("Please complete all product details before adding.");
     }
   };
 
-  const calculateNetTotal = () =>
-    sales.reduce((total, sale) => total + parseFloat(sale.totalPrice), 0);
+  const calculateNetTotal = () => {
+    const enteredSaleTotal = sale.quantity * sale.price;
+    const addedSalesTotal = sales.reduce(
+      (total, sale) => total + parseFloat(sale.totalPrice),
+      0
+    );
+    return enteredSaleTotal + addedSalesTotal;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,7 +118,7 @@ const AddSales = () => {
       customerName,
       contactNumber: customerContact,
       paymentMethod,
-      journalNumber,
+      journalNumber: paymentMethod === "online" ? journalNumber : null,
       totalAmount: calculateNetTotal(),
       sales,
     };
@@ -149,7 +172,8 @@ const AddSales = () => {
             />
           </div>
           <div>
-            <label>Date</label><br />
+            <label>Date</label>
+            <br />
             <input
               type="date"
               value={date}
@@ -167,17 +191,128 @@ const AddSales = () => {
                 <th>Quantity</th>
                 <th>Price BTN</th>
                 <th>Total Price BTN</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {sales.map((sale, index) => (
                 <tr key={index}>
-                  <td>{sale.product.name}</td>
-                  <td>{sale.quantity}</td>
-                  <td>{sale.price}</td>
-                  <td>{sale.totalPrice}</td>
+                  {sale.isEditing ? (
+                    <>
+                      {/* Editable row */}
+                      <td>
+                        <select
+                          value={sale.product.id || ""}
+                          onChange={(e) => {
+                            const productId = parseInt(e.target.value);
+                            const product = products.find(
+                              (p) => p.productId === productId
+                            );
+
+                            if (product) {
+                              const updatedSales = [...sales];
+                              updatedSales[index] = {
+                                ...updatedSales[index],
+                                product: {
+                                  id: product.productId,
+                                  name: product.name,
+                                },
+                                price: product.price,
+                                totalPrice:
+                                  product.price * updatedSales[index].quantity,
+                              };
+                              setSales(updatedSales);
+                            }
+                          }}
+                        >
+                          <option value="">Select Product</option>
+                          {products.map((product) => (
+                            <option
+                              key={product.productId}
+                              value={product.productId}
+                            >
+                              {product.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={sale.quantity}
+                          onChange={(e) => {
+                            const quantity = parseInt(e.target.value) || 0;
+                            const updatedSales = [...sales];
+                            updatedSales[index] = {
+                              ...updatedSales[index],
+                              quantity,
+                              totalPrice: updatedSales[index].price * quantity,
+                            };
+                            setSales(updatedSales);
+                          }}
+                          min="1"
+                        />
+                      </td>
+                      <td>{sale.price}</td>
+                      <td>{sale.totalPrice}</td>
+                      <td>
+                        <button
+                          className="but but-save"
+                          onClick={() => {
+                            const updatedSales = [...sales];
+                            updatedSales[index].isEditing = false;
+                            setSales(updatedSales);
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="but but-delete"
+                          onClick={() => {
+                            const updatedSales = [...sales];
+                            updatedSales.splice(index, 1); // Remove the sale
+                            setSales(updatedSales);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      {/* Non-editable row */}
+                      <td>{sale.product.name}</td>
+                      <td>{sale.quantity}</td>
+                      <td>{sale.price}</td>
+                      <td>{sale.totalPrice}</td>
+                      <td>
+                        <button
+                          className="but but-edit"
+                          onClick={() => {
+                            const updatedSales = [...sales];
+                            updatedSales[index].isEditing = true;
+                            setSales(updatedSales);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="but but-delete"
+                          onClick={() => {
+                            const updatedSales = [...sales];
+                            updatedSales.splice(index, 1); // Remove the sale
+                            setSales(updatedSales);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
+
+              {/* Add new sale row */}
               <tr>
                 <td>
                   <select
@@ -196,14 +331,14 @@ const AddSales = () => {
                             id: product.productId,
                             name: product.name,
                           },
-                          price: product.price, // Set the price immediately
+                          price: product.price,
                         }));
                       }
                     }}
                   >
                     <option value="">Select Product</option>
                     {products.map((product) => (
-                      <option className="opition_p" key={product.productId} value={product.productId}>
+                      <option key={product.productId} value={product.productId}>
                         {product.name}
                       </option>
                     ))}
@@ -219,14 +354,16 @@ const AddSales = () => {
                     min="1"
                   />
                 </td>
-                <td>{sale.price}</td>
+                <td>{selectedProduct ? selectedProduct.price : sale.price}</td>
                 <td>{sale.totalPrice}</td>
+                <td>
+                  <button type="button" className="but but-add"onClick={addSaleToList}>
+                    + Add
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
-          <button type="button" className="addrow" onClick={addSaleToList}>
-            + Add
-          </button>
         </div>
 
         <div className="net-total">

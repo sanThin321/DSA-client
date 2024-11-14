@@ -68,9 +68,7 @@ const LoginPage = ({ onLogin }) => {
           </div>
           <p
             className="field forgot-password"
-            onClick={() => {
-              navigator;
-            }}
+            onClick={() => navigate("/forgotpassword")}
           >
             Forgot Password?
           </p>
