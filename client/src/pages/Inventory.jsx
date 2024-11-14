@@ -464,7 +464,7 @@ const Inventory = () => {
                         style={{ display: "flex", justifyContent: "center" }}
                       >
                         <img
-                          src={`data:image/jpeg;base64,${product.imageData}`}
+                          src={product.imageData}
                           loading="lazy"
                           alt="Product"
                           width={40}

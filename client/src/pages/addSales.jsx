@@ -5,6 +5,7 @@ import "./css/dashboard.css";
 import { useStore } from "../context/Store";
 import { useAuth } from "../auth/auth";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddSales = () => {
   const { authorizationToken } = useAuth();
@@ -14,7 +15,7 @@ const AddSales = () => {
   const [customerName, setCustomerName] = useState("");
   const [customerContact, setCustomerContact] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("offline");
   const [journalNumber, setJournalNumber] = useState("");
 
   const [sale, setSale] = useState({
@@ -79,13 +80,13 @@ const AddSales = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!customerName || !customerContact || !paymentMethod) {
-      alert("Please fill in all required fields.");
+    if (!customerName || !customerContact) {
+      toast.warning("Please fill in all required fields.");
       return;
     }
 
     if (paymentMethod === "online" && !journalNumber) {
-      alert("Please provide the journal number for online payment.");
+      toast.warning("Please provide the journal number for online payment.");
       return;
     }
 
@@ -111,14 +112,12 @@ const AddSales = () => {
       );
 
       if (response.status === 201) {
-        alert("Sale added successfully!");
+        toast.success("Sale added successfully!");
         navigate("/sales");
-      } else {
-        alert(`Failed to add sale: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while adding the sale.");
+      toast.error("An error occurred while adding the sale.");
     }
   };
 

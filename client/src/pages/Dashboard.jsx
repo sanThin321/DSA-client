@@ -86,8 +86,12 @@ const Dashboard = () => {
         closePopup();
         refreshCategory();
       }
+    
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Category already exists.");
+      setNewCategory("");
+      closePopup();
+      // toast.error(error.message);
     }
   };
 

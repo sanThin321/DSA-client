@@ -1,37 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import filter from "../assets/filter.svg";
 import "./css/sale.css";
 import { NavLink } from "react-router-dom";
-const Sales = () => {
+import { useStore } from "../context/Store";
 
- const productsData = [
-    {
-      id: 213,
-      customername: "Sangay Thinley",
-      customercontact: 77615421,
-      payment:"Credit card",
-      amount: 500,
-      date: "11/12/22",
-      jrnl: 3444386,
-    },
-    {
-      id: 214,
-      customername: "Tenzin Wangchuk",
-      customercontact: 77615422,
-      payment:"Credit card",
-      amount: 700,
-      date: "12/12/22",
-      jrnl: 3444387,
-    },
-  ];
+const Sales = () => {
+  const {sales, refreshSales} = useStore();
+
+//  const sales = [
+//     {
+//       id: 213,
+//       customername: "Sangay Thinley",
+//       customercontact: 77615421,
+//       payment:"Credit card",
+//       amount: 500,
+//       date: "11/12/22",
+//       jrnl: 3444386,
+//     },
+//     {
+//       id: 214,
+//       customername: "Tenzin Wangchuk",
+//       customercontact: 77615422,
+//       payment:"Credit card",
+//       amount: 700,
+//       date: "12/12/22",
+//       jrnl: 3444387,
+//     },
+//   ];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedColumn, setSelectedColumn] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredProducts = productsData.filter((product) => {
+  const filteredProducts = sales.filter((product) => {
     if (selectedColumn === "") {
       // Apply the filter to all columns
       return Object.values(product).some((value) =>
@@ -71,6 +74,10 @@ const Sales = () => {
     date: "Date",
     jrnl: "Journal No",
   };
+
+  useEffect(() => {
+    refreshSales();
+  }, [])
 
 
   return (
@@ -164,63 +171,63 @@ const Sales = () => {
           </thead>
           <tbody className="Contain">
             {currentItems.length > 0 ? (
-              currentItems.map((product, index) => (
+              currentItems.map((sale, index) => (
                 <tr key={index}>
                   {/* Each cell should be wrapped individually in NavLink */}
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.id}
+                      {sale.saleId}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.customername}
+                      {sale.customerName}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.customercontact}
+                      {sale.contactNumber}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.payment}
+                      {sale.paymentMethod}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.amount}
+                      {sale.totalAmount}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.date}
+                      {sale.saleDate}
                     </NavLink>
                   </td>
                   <td>
                     <NavLink
-                      to={`/sales/${product.id}`}
+                      to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {product.jrnl}
+                      {sale.journalNumber}
                     </NavLink>
                   </td>
                 </tr>

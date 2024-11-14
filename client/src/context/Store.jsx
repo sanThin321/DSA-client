@@ -9,6 +9,7 @@ export const StoreProvider = ({ children }) => {
   const { authorizationToken } = useAuth();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [sales, setSales] = useState([]);
 
   const getAllProducts = async () => {
     try {
@@ -52,6 +53,27 @@ export const StoreProvider = ({ children }) => {
     getCategories();
   };
 
+   // get cateSales
+   const getSales = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/api/sale/all", {
+        headers: {
+          Authorization: authorizationToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setSales(response.data);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const refreshSales = () => {
+    getSales();
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -59,6 +81,8 @@ export const StoreProvider = ({ children }) => {
         refreshProducts,
         categories,
         refreshCategory,
+        sales,
+        refreshSales
       }}
     >
       {children}

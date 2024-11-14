@@ -295,7 +295,7 @@ const ProductDetail = () => {
               <div className="image_border rounded">
                 {product.imageData ? (
                   <img
-                    src={`data:image/jpeg;base64,${product.imageData}`}
+                    src={product.imageData}
                     loading="lazy"
                     alt="Product"
                     className="fit-image"
