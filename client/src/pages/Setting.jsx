@@ -182,17 +182,20 @@ const Settings = () => {
 
   const handleEmailUpdate = async (e) => {
     e.preventDefault();
-    const stored=JSON.parse(localStorage.getItem("user"));
+    const stored = JSON.parse(localStorage.getItem("user"));
     try {
-      const response = await axios.post(`http://localhost:8081/change-email?currentEmail=${stored.email}&newEmail=${newEmail} &currentPassword=${currentPassword}`,{
-        email: newEmail,
-        password: currentPassword,
-      },
-      {
-        headers: {
-          Authorization: authorizationToken,
+      const response = await axios.post(
+        `http://localhost:8081/change-email?currentEmail=${stored.email}&newEmail=${newEmail} &currentPassword=${currentPassword}`,
+        {
+          email: newEmail,
+          password: currentPassword,
         },
-      });
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
       if (response.status === 200) {
         toast.success("Email updated successfully!");
         // Update localStorage and state
@@ -207,19 +210,20 @@ const Settings = () => {
       toast.error(error.response?.data?.message || "An error occurred!");
     }
   };
-  const sendCode=async()=>{
-    const stored=JSON.parse(localStorage.getItem("user"));
+  const sendCode = async () => {
+    const stored = JSON.parse(localStorage.getItem("user"));
     try {
-      // Send a request to your backend to initiate the password reset process
-      const response = await axios.post(`http://localhost:8081/forgot-password?email=sangayt489@gmail.com`);
-console.log(stored.email)
+      const response = await axios.post(
+        `http://localhost:8081/forgot-password?email=${user.email}`
+      );
+      console.log(stored.email);
       if (response.status === 200) {
         toast.success("Reset code sent to your email.");
       }
     } catch (error) {
       toast.error("Failed to send reset email. Please try again.");
     }
-  }
+  };
   const handleCodeValidation = async (e) => {
     e.preventDefault();
     try {
@@ -304,7 +308,7 @@ console.log(stored.email)
                 onClick={() => {
                   setActiveForm("password");
                   setIsCodeValidated(false);
-                  sendCode()
+                  sendCode();
                 }}
               >
                 Change

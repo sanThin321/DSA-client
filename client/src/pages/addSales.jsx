@@ -158,7 +158,7 @@ const AddSales = () => {
       <h2 className="topic">Add new sale details</h2>
       <form onSubmit={handleSubmit}>
         <div className="customer_details">
-          <div>
+          <div className="d-flex flex-column">
             <label>Customer Name</label>
             <input
               type="text"
