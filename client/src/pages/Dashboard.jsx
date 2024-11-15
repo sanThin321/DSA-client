@@ -95,6 +95,20 @@ const Dashboard = () => {
   const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
+  const {
+    count,
+    refreshCategoryCount,
+    pcount,
+    refreshProductCount,
+    // Revenue_r,
+    // refreshrevenue,
+  } = useStore();
+
+  useEffect(() => {
+    refreshCategoryCount();
+    refreshProductCount();
+    // refreshrevenue()
+  }, []);
 
   useEffect(() => {
     getLowStockProducts(currentDate);
@@ -140,61 +154,57 @@ const Dashboard = () => {
   return (
     <div>
       <div className="container1">
-        <div className="contain1">
-          <h2 className="topic">Sales</h2>
-          <div className="inneroverview">
-            <div className="inner">
-              <img src={sale1} alt="" />
-              <p className="subtopic">
-                <strong className="strong">
-                  BTN <span>834</span>{" "}
-                </strong>
-                Sales
-              </p>
-            </div>
-            <div className="Hline" />
-            <div className="inner">
-              <img src={sale2} alt="" />
-              <p className="subtopic">
-                <strong className="strong">
-                  BTN <span>18,300</span>{" "}
-                </strong>
-                Revenue
-              </p>
-            </div>
-            <div className="Hline" />
-            <div className="inner">
-              <img src={sale3} alt="" />
-              <p className="subtopic">
-                <strong className="strong">
-                  BTN <span>834</span>{" "}
-                </strong>
-                Profit
-              </p>
-            </div>
-            <div className="Hline" />
-            <div className="inner">
-              <img src={sale4} alt="" />
-              <p className="subtopic">
-                <strong className="strong">
-                  BTN <span>17,432</span>{" "}
-                </strong>
-                Cost
-              </p>
-            </div>
+        <div className="bg-white rounded p-3 d-flex justify-content-between align-items-center">
+          <div className="inner">
+            <img src={sale1} alt="" />
+            <p className="subtopic">
+              <strong className="strong">
+                BTN <span>834</span>{" "}
+              </strong>
+              Sales
+            </p>
+          </div>
+          <div className="Hline" />
+          <div className="inner">
+            <img src={sale2} alt="" />
+            <p className="subtopic">
+              <strong className="strong">
+                BTN <span>18,300</span>{" "}
+              </strong>
+              Revenue
+            </p>
+          </div>
+          <div className="Hline" />
+          <div className="inner">
+            <img src={sale3} alt="" />
+            <p className="subtopic">
+              <strong className="strong">
+                BTN <span>834</span>{" "}
+              </strong>
+              Profit
+            </p>
+          </div>
+          <div className="Hline" />
+          <div className="inner">
+            <img src={sale4} alt="" />
+            <p className="subtopic">
+              <strong className="strong">
+                BTN <span>17,432</span>{" "}
+              </strong>
+              Cost
+            </p>
           </div>
         </div>
-        <div className="contain2">
-          <h2 className="topic">Inventory Summary</h2>
+        <div className="contain2 p-3 d-flex justify-content-between">
           <div className="inner">
-            <img src={insale1} alt="" />
-            <p>
-              <strong>
-                <span className="subtopic">868</span>
-              </strong>{" "}
-              <br />
-              Quantity in Head
-            </p>
+            {/* <img src={insale1} alt="icon" /> */}
+            <h3>{pcount}</h3>
+            <p>Number of Products</p>
+          </div>
+          <div className="Hline" />
+          <div className="text-center">
+            <h3>{count}</h3>
+            <p>Number of Category</p>
           </div>
         </div>
         <div className="grid-item item1">

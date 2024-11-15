@@ -18,16 +18,22 @@ const ForgotPassword = () => {
     }
 
     try {
-      // Send a request to your backend to initiate the password reset process
-      const response = await axios.post(`http://localhost:8081/forgot-password?email=${ email }`);
+      const response = await axios.post(
+        `http://localhost:8081/forgot-password?email=${email}`
+      );
 
       if (response.status === 200) {
         toast.success("Reset code sent to your email.");
+        localStorage.setItem("email", email);
         navigate("/validcode");
-        localStorage.setItem("email", email)
       }
     } catch (error) {
-      toast.error("Failed to send reset email. Please try again.");
+      // Check for a response from the backend
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to send reset email. Please try again.");
+      }
     }
   };
 
