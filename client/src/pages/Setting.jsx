@@ -302,7 +302,7 @@ const Settings = () => {
                 <h4 className="set_subtopic">Password</h4>
                 <p className="set_detail">***********</p>{" "}
                 {/* Password is hidden */}
-              </div>
+              </div>{/**/}
               <button
                 className="set_btn"
                 onClick={() => {
