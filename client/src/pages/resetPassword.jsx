@@ -24,10 +24,10 @@ const ResetPassword = () => {
     }
 
     try {
-      // Replace with your actual endpoint for resetting the password
-      const request = await axios.post("http://localhost:8081/reset-password", {
-        password,
-      });
+      const email = localStorage.getItem("email")
+      const code = localStorage.getItem("code")
+
+      const request = await axios.post(`http://localhost:8081/reset-password?email=${email}&code=${code}&newPassword=${password}`);
 
       if (request.status === 200) {
         toast.success("Password reset successful.");
