@@ -12,67 +12,102 @@ export const StoreProvider = ({ children }) => {
   const [sales, setSales] = useState([]);
   const [count, setCount] = useState([]);
   const [pcount, setpCount] = useState([]);
-  // const [Revenue_r, setRevenue] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [salesCount, setSalesCount] = useState(0);
 
-  const getcategoriescount=async()=>{
+  const getcategoriescount = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/stats/product/category/count", {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:8081/api/stats/product/category/count",
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
 
       if (response.status === 200) {
         setCount(response.data);
-
       }
     } catch (error) {
       toast.error("Could not fetch products.");
     }
-  }
+  };
+
   const refreshCategoryCount = () => {
     getcategoriescount();
   };
-  const getproductcount=async()=>{
+
+  const getproductcount = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/stats/product/count", {
-        headers: {
-          Authorization: authorizationToken,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:8081/api/stats/product/count",
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
 
       if (response.status === 200) {
         setpCount(response.data);
-
       }
     } catch (error) {
       toast.error("Could not fetch products.");
     }
-  }
+  };
   const refreshProductCount = () => {
     getproductcount();
   };
 
-  // const getrevenue=async()=>{
-  //   try {
-  //     const response = await axios.get("http://localhost:8081/api/stats/product/category-revenue", {
-  //       headers: {
-  //         Authorization: authorizationToken,
-  //       },
-  //     });
+  const getTotalRevenue = async () => {
+    try {
+      const today = getCurrentDate();
+      const response = await axios.get(
+        `http://localhost:8081/api/sale/revenue-by-date?saleDate=${today}`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
 
-  //     if (response.status === 200) {
-  //       setRevenue(response.data);
+      if (response.status === 200) {
+        setTotalRevenue(response.data);
+      }
+    } catch (error) {
+      toast.error("Could not fetch products.");
+    }
+  };
 
-  //     }
-  //   } catch (error) {
-  //     toast.error("Could not fetch products.");
-  //   }
-  // }
-  // const refreshrevenue = () => {
-  //   getrevenue();
-  // };
+  const getSalesCount = async () => {
+    try {
+      const today = getCurrentDate();
+      const response = await axios.get(
+        `http://localhost:8081/api/sale/sales-count-by-date?saleDate=${today}`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
 
+      if (response.status === 200) {
+        setSalesCount(response.data);
+      }
+    } catch (error) {
+      toast.error("Could not fetch products.");
+    }
+  };
+
+
+  const refreshTotalRevenue = () => {
+    getTotalRevenue();
+  };
+
+  const refreshSalesCount = () => {
+    getSalesCount();
+  };
 
   const getAllProducts = async () => {
     try {
@@ -116,8 +151,8 @@ export const StoreProvider = ({ children }) => {
     getCategories();
   };
 
-   // get cateSales
-   const getSales = async () => {
+  // get cateSales
+  const getSales = async () => {
     try {
       const response = await axios.get("http://localhost:8081/api/sale/all", {
         headers: {
@@ -137,6 +172,13 @@ export const StoreProvider = ({ children }) => {
     getSales();
   };
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   return (
     <StoreContext.Provider
       value={{
@@ -150,8 +192,10 @@ export const StoreProvider = ({ children }) => {
         refreshCategoryCount,
         pcount,
         refreshProductCount,
-        // Revenue_r,
-        // refreshrevenue
+        refreshTotalRevenue,
+        totalRevenue,
+        refreshSalesCount,
+        salesCount
       }}
     >
       {children}

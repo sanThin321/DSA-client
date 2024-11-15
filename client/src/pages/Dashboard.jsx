@@ -15,7 +15,14 @@ import { useStore } from "../context/Store";
 
 const Dashboard = () => {
   const { authorizationToken } = useAuth();
-  const { categories, refreshCategory } = useStore();
+  const {
+    categories,
+    refreshCategory,
+    refreshTotalRevenue,
+    totalRevenue,
+    refreshSalesCount,
+    salesCount,
+  } = useStore();
   const [lowStockItems, setLowStockItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -107,7 +114,8 @@ const Dashboard = () => {
   useEffect(() => {
     refreshCategoryCount();
     refreshProductCount();
-    // refreshrevenue()
+    refreshTotalRevenue();
+    refreshSalesCount();
   }, []);
 
   useEffect(() => {
@@ -155,44 +163,45 @@ const Dashboard = () => {
     <div>
       <div className="container1">
         <div className="bg-white rounded p-3 d-flex justify-content-between align-items-center">
-          <div className="inner">
-            <img src={sale1} alt="" />
-            <p className="subtopic">
-              <strong className="strong">
-                BTN <span>834</span>{" "}
-              </strong>
-              Sales
-            </p>
+          <div className="d-flex gap-2">
+            <img src={sale1} width={45} alt="icon" />
+            <div>
+              <p className="mb-0">
+                <small>Revenue</small>
+              </p>
+              <h5 className="">Nu. {totalRevenue}</h5>
+            </div>
           </div>
           <div className="Hline" />
-          <div className="inner">
-            <img src={sale2} alt="" />
-            <p className="subtopic">
-              <strong className="strong">
-                BTN <span>18,300</span>{" "}
-              </strong>
-              Revenue
-            </p>
+          <div className="d-flex gap-2">
+            <img src={sale2} alt="icon" width={45} />
+
+            <div>
+              <p className="mb-0">
+                <small>Revenue</small>
+              </p>
+              <h5 className="">Nu. {totalRevenue}</h5>
+            </div>
           </div>
           <div className="Hline" />
-          <div className="inner">
-            <img src={sale3} alt="" />
-            <p className="subtopic">
-              <strong className="strong">
-                BTN <span>834</span>{" "}
-              </strong>
-              Profit
-            </p>
+          <div className="d-flex gap-2">
+            <img src={sale3} width={45} alt="icon" />
+            <div>
+              <p className="mb-0">
+                <small>Sales Count</small>
+              </p>
+              <h5 className="">{salesCount}</h5>
+            </div>
           </div>
           <div className="Hline" />
-          <div className="inner">
-            <img src={sale4} alt="" />
-            <p className="subtopic">
-              <strong className="strong">
-                BTN <span>17,432</span>{" "}
-              </strong>
-              Cost
-            </p>
+          <div className="d-flex gap-2">
+            <img src={sale4} width={45} alt="icon" />
+            <div>
+              <p className="mb-0">
+                <small>Revenue</small>
+              </p>
+              <h5 className="">Nu. {totalRevenue}</h5>
+            </div>
           </div>
         </div>
         <div className="contain2 p-3 d-flex justify-content-between">
