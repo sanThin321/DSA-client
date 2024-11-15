@@ -24,6 +24,7 @@
     display: flex;
     justify-content: end;
     color: var(--blue);
+    cursor: pointer;
 }
 .field{
     padding-bottom: 7%;

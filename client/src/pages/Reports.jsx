@@ -95,32 +95,39 @@ const Reports = () => {
           </div>
         </div>
         <div className="best">
-          <h1 className="topic">Best selling category</h1>
-          <li className="bsale">
-            Category <span>Revenue</span>
-            <span>Increase By</span>
-          </li>
-          <li className="bsale">
-            <span>Vegetable</span>{" "}
-            <span>
-              BTN <span>26,000</span>
-            </span>{" "}
-            <span>3.2%</span>
-          </li>
-          <li className="bsale">
-            <span>Instant Food</span>{" "}
-            <span>
-              BTN <span>22,000</span>
-            </span>
-            <span>2%</span>
-          </li>
-          <li className="bsale">
-            <span>Household</span>
-            <span>
-              BTN <span>22,000</span>
-            </span>
-            <span>1.5%</span>
-          </li>
+          <h1 className="topic">Best Selling Category</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Revenue</th>
+                <th>Increase By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Vegetable</td>
+                <td>
+                  BTN <span>26,000</span>
+                </td>
+                <td>3.2%</td>
+              </tr>
+              <tr>
+                <td>Instant Food</td>
+                <td>
+                  BTN <span>22,000</span>
+                </td>
+                <td>2%</td>
+              </tr>
+              <tr>
+                <td>Household</td>
+                <td>
+                  BTN <span>22,000</span>
+                </td>
+                <td>1.5%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div className="profit">
