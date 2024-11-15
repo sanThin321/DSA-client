@@ -30,6 +30,7 @@ const Layout = () => {
               <Route path="/inventory/:id" element={<InventroryDetail />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/sales" element={<Sales />} />
+              <Route path="/add-sale" element={<AddSales />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/sales/:id" element={<SalesInfo />} />
               <Route path="/sales/add-sale" element={<AddSales />} />

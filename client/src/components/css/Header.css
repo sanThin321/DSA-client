@@ -73,13 +73,19 @@
 .IconWithName {
     display: flex;
     align-items: center;
+    width: 100%;
+    &:hover{
+        background-color: #8fd2ef;
+    }
 }
 
 .icon.notcenter {
     margin-right: 15px;
     margin-left: 15px;
 }
-
+.icon{
+    font-size: 15px;
+}
 .icon.center{
     margin-left: 10px;
 }

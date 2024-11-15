@@ -9,8 +9,9 @@ import {
   FaShoppingBag,
   FaCog,
   FaSignOutAlt,
+  FaFirstAid
 } from "react-icons/fa";
-import { NavLink, useLocation } from "react-router-dom";
+import { BiSolidMessageAdd } from "react-icons/bi";import { NavLink, useLocation } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { useAuth } from "../auth/auth";
 
@@ -43,6 +44,11 @@ const Sidebar = ({ children }) => {
       name: "Sales",
       icon: <FaCommentAlt />,
     },
+    {
+      path: "/add-sale",
+      name: "Add sales",
+      icon: <FaFirstAid />,
+    },
   ];
 
   const bottomMenu = [
@@ -74,7 +80,7 @@ const Sidebar = ({ children }) => {
               key={index}
               className={`link ${activeItem === item.name ? "active" : ""}`}
             >
-              <div className="IconWithName">
+              <div className="IconWithName rounded p-1">
                 <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                   {item.icon}
                 </div>
@@ -95,7 +101,7 @@ const Sidebar = ({ children }) => {
                 key={index}
                 className={`link ${activeItem === item.name ? "active" : ""}`}
               >
-                <div className="IconWithName">
+                <div className="IconWithName rounded p-1">
                   <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                     {item.icon}
                   </div>
