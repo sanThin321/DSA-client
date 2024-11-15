@@ -66,7 +66,7 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className="Container">
-      <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isOpen ? "open" : "closed"} d-flex flex-column`}>
         <div className="logo">
           <img src={closeLogo} alt="" />
           <p className={`logoText ${isOpen ? "show" : "hide"}`}>4 SALE</p>
@@ -101,7 +101,7 @@ const Sidebar = ({ children }) => {
                 key={index}
                 className={`link ${activeItem === item.name ? "active" : ""}`}
               >
-                <div className="IconWithName rounded p-1">
+                <div className="IconWithName p-1 rounded">
                   <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                     {item.icon}
                   </div>
@@ -113,11 +113,11 @@ const Sidebar = ({ children }) => {
             ) : (
               <div
                 key={index}
-                className={`link ${activeItem === item.name ? "active" : ""}`}
+                className={`link ${activeItem === item.name ? "active" : ""} `}
                 onClick={item.onClick}
                 style={{cursor: "pointer"}}
               >
-                <div className="IconWithName">
+                <div className="IconWithName rounded p-1">
                   <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                     {item.icon}
                   </div>

@@ -267,12 +267,12 @@ const Settings = () => {
           <div className="set_account">
             <div className="set_change">
               <div>
-                <h4 className="set_subtopic">Username</h4>
-                <p className="set_detail">{currentUsername}</p>{" "}
+                <p className="mb-0">Username</p>
+                <h5 className="">{currentUsername}</h5>{" "}
                 {/* Displaying fetched username */}
               </div>
               <button
-                className="set_btn"
+                className="btn btn-primary"
                 onClick={() => {
                   setActiveForm("username");
                   setIsCodeValidated(false);
@@ -283,12 +283,12 @@ const Settings = () => {
             </div>
             <div className="set_change">
               <div>
-                <h4 className="set_subtopic">Email</h4>
-                <p className="set_detail">{currentEmail}</p>{" "}
+                <p className="mb-0">Email</p>
+                <h5 className="">{currentEmail}</h5>{" "}
                 {/* Displaying fetched email */}
               </div>
               <button
-                className="set_btn"
+                className="btn btn-primary"
                 onClick={() => {
                   setActiveForm("email");
                   setIsCodeValidated(false);
@@ -299,12 +299,12 @@ const Settings = () => {
             </div>
             <div className="set_change">
               <div>
-                <h4 className="set_subtopic">Password</h4>
-                <p className="set_detail">***********</p>{" "}
+                <p className="mb-0">Password</p>
+                <h5 className="">***********</h5>{" "}
                 {/* Password is hidden */}
               </div>{/**/}
               <button
-                className="set_btn"
+                className="btn btn-primary"
                 onClick={() => {
                   setActiveForm("password");
                   setIsCodeValidated(false);

@@ -58,8 +58,9 @@
     color: black;
 }
 
-.link.active {
-    color: #1570EF;
+.link.active div{
+    color: #096bf5;
+    background-color: #d2f0fc;;
 }
 .link_text{
     font-size: 18px;
@@ -94,7 +95,7 @@
 
 .menu-section {
     flex-grow: 1;
-    padding-bottom: 250px;
+    /* padding-bottom: 250px; */
 }
 .bottom-section{
     flex-grow: 1;
