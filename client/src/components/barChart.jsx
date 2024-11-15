@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,110 +9,93 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import axios from "axios";
+import { useAuth } from "../auth/auth";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarChart = () => {
-  const [barData, setBarData] = useState({
-    labels:[],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [],
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Sales",
-        data: [],
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-      },
-    ]
-  })
+  const { authorizationToken } = useAuth();
+  const [barData, setBarData] = useState(null);
 
-  // Define your data for sales and revenue
-  const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [
-          50000, 45000, 55000, 30000, 40000, 45000, 50000, 55000, 45000, 48000,
-          42000, 47000,
-        ],
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Sales",
-        data: [
-          40000, 38000, 42000, 27000, 35000, 37000, 42000, 46000, 38000, 43000,
-          39000, 41000,
-        ],
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-      },
-    ],
+  const getBarData = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8081/api/stats/product/category-revenue`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        const fetchedData = res.data;
+
+        const data = {
+          labels: fetchedData.categories, 
+          datasets: [
+            {
+              label: "Revenue",
+              data: fetchedData.totalRevenue, 
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+            },
+            {
+              label: "Total Sales",
+              data: fetchedData.totalSales,
+              backgroundColor: "rgba(54, 162, 235, 0.6)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        setBarData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching bar data:", error);
+    }
   };
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom", 
+        position: "bottom",
         labels: {
-          usePointStyle: true, 
-          pointStyle: "circle", 
+          usePointStyle: true,
+          pointStyle: "circle",
         },
       },
-      //   title: {
-      //     display: true,
-      //     text: 'Sales & Revenue', // Chart title
-      //   },
     },
     scales: {
       x: {
         grid: {
-          display: false, 
+          display: false,
         },
       },
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 10000,
+          stepSize: 2,
         },
       },
     },
   };
 
+  useEffect(() => {
+    getBarData();
+  }, []);
+
   return (
     <div>
-      <Bar data={data} options={options} />
+      {barData ? (
+        <Bar data={barData} options={options} />
+      ) : (
+        <p>Loading chart...</p>
+      )}
     </div>
   );
 };

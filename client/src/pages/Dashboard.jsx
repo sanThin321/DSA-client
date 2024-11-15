@@ -334,21 +334,21 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <div className="grid-item item3">
-          <h2 className={`topic graph ${isPopupOpen ? "" : "Scroll"}`}>
-            Sales & Revenue
+        <div className="grid-item item3 p-1 px-3">
+          <h2 className={`topic graph ${isPopupOpen ? "" : "Scroll"} mb-0`}>
+            Total Sale & Revenue
           </h2>
           <BarChart />
         </div>
-        <div className="grid-item item4">
+        <div className="grid-item item4 p-2 px-3">
           <h2 className={`topic Button ${isPopupOpen ? "" : "Scroll"}`}>
-            Categories{" "}
-            <span
-              className="addButton"
+            Category{" "}
+            <button
+              className="btn btn-primary p-1 px-2 addButton"
               onClick={() => openPopup("addCategory")}
             >
               Add Category
-            </span>
+            </button>
           </h2>
           {popupType === "addCategory" && (
             <Popup

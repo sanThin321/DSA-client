@@ -472,7 +472,6 @@ const Inventory = () => {
                           loading="lazy"
                           alt="Product"
                           width={40}
-                          height={40}
                         />
                       </div>
                     </td>
