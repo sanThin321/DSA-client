@@ -6,12 +6,12 @@ import {
   FaBars,
   FaRegChartBar,
   FaCommentAlt,
-  FaShoppingBag,
+  FaGlassWhiskey,
   FaCog,
   FaSignOutAlt,
   FaFirstAid
 } from "react-icons/fa";
-import { BiSolidMessageAdd } from "react-icons/bi";import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { useAuth } from "../auth/auth";
 
@@ -32,7 +32,7 @@ const Sidebar = ({ children }) => {
     {
       path: "/inventory",
       name: "Inventory",
-      icon: <FaShoppingBag />,
+      icon: <FaGlassWhiskey />,
     },
     {
       path: "/reports",

@@ -61,7 +61,9 @@
 .link.active {
     color: #1570EF;
 }
-
+.link_text{
+    font-size: 18px;
+}
 .link_text.show {
     display: block;
 }

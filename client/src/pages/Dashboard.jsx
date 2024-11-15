@@ -267,7 +267,7 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {data.map((item, index) => (
-                <tr key={index}>
+                <tr key={index} className="trow">
                   <td className="d-flex align-items-center">
                     <img src={item.imageUrl} alt="product image" width={35} />
                     <p className="mb-0">{item.productName}</p>
