@@ -6,11 +6,12 @@ import {
   FaBars,
   FaRegChartBar,
   FaCommentAlt,
-  FaShoppingBag,
+  FaGlassWhiskey,
   FaCog,
   FaSignOutAlt,
+  FaFirstAid
 } from "react-icons/fa";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { useAuth } from "../auth/auth";
 
@@ -31,7 +32,7 @@ const Sidebar = ({ children }) => {
     {
       path: "/inventory",
       name: "Inventory",
-      icon: <FaShoppingBag />,
+      icon: <FaGlassWhiskey />,
     },
     {
       path: "/reports",
@@ -42,6 +43,11 @@ const Sidebar = ({ children }) => {
       path: "/sales",
       name: "Sales",
       icon: <FaCommentAlt />,
+    },
+    {
+      path: "/add-sale",
+      name: "Add sales",
+      icon: <FaFirstAid />,
     },
   ];
 
@@ -74,7 +80,7 @@ const Sidebar = ({ children }) => {
               key={index}
               className={`link ${activeItem === item.name ? "active" : ""}`}
             >
-              <div className="IconWithName">
+              <div className="IconWithName rounded p-1">
                 <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                   {item.icon}
                 </div>
@@ -95,7 +101,7 @@ const Sidebar = ({ children }) => {
                 key={index}
                 className={`link ${activeItem === item.name ? "active" : ""}`}
               >
-                <div className="IconWithName">
+                <div className="IconWithName rounded p-1">
                   <div className={`icon ${isOpen ? "notcenter" : "center"}`}>
                     {item.icon}
                   </div>
