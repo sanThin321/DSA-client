@@ -42,8 +42,8 @@ const LoginPage = ({ onLogin }) => {
         toast.error("Invalid username or password.");
       } else {
         toast.error("An error occurred. Please try again later.");
-      }
-    }
+      }
+    }
   };
 
   return (

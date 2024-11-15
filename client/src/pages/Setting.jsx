@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { toast } from "react-toastify"; // Make sure you have this installed
-import "react-toastify/dist/ReactToastify.css"; // Import Toast styles
-import "./css/Settings.css"; // Ensure this path is correct
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./css/Settings.css";
 import logo from "../assets/logo.svg";
+import axios from "axios";
+import { useAuth } from "../auth/auth";
 
 const Settings = () => {
   const [activeForm, setActiveForm] = useState("logo");
@@ -14,24 +15,23 @@ const Settings = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+  const { authorizationToken } = useAuth();
 
-  // States to hold fetched user data
+  // States to hold user data fetched from localStorage
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
 
-  // Fetch the current username and email when the component mounts
+  // Fetch user details from localStorage when the component mounts
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const response = await axios.get("/api/user-details"); // Adjust the endpoint as needed
-        setCurrentUsername(response.data.username); // Assuming the response contains 'username'
-        setCurrentEmail(response.data.email); // Assuming the response contains 'email'
-      } catch (error) {
-        toast.error("Error fetching user details!");
-      }
-    };
-    
-    fetchUserDetails();
+    const stored = localStorage.getItem("user");
+
+    if (stored) {
+      const user = JSON.parse(stored); // Assuming 'user' is a JSON string in localStorage
+      setCurrentUsername(user.username);
+      setCurrentEmail(user.email);
+    } else {
+      toast.error("User details not found in localStorage!");
+    }
   }, []);
 
   const renderForm = () => {
@@ -149,45 +149,83 @@ const Settings = () => {
     }
   };
 
-  // Handle username update
   const handleUsernameUpdate = async (e) => {
     e.preventDefault();
+    const stored = JSON.parse(localStorage.getItem("user"));
     try {
-      const response = await axios.post("/api/update-username", {
-        username: newUsername,
-        password: currentPassword,
-      });
+      const response = await axios.post(
+        `http://localhost:8081/change-username?email=${stored.email}&currentPassword=${currentPassword}&newUsername=${newUsername}`,
+        {
+          username: newUsername,
+          password: currentPassword,
+        },
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
       if (response.status === 200) {
         toast.success("Username updated successfully!");
+        // Update localStorage and state
+        stored.username = newUsername;
+        localStorage.setItem("user", JSON.stringify(stored)); // Update the full user object
+        setCurrentUsername(newUsername);
         setActiveForm("logo");
+        setNewUsername("");
+        setCurrentPassword("");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred!");
     }
   };
 
-  // Handle email update
   const handleEmailUpdate = async (e) => {
     e.preventDefault();
+    const stored=JSON.parse(localStorage.getItem("user"));
     try {
-      const response = await axios.post("/api/update-email", {
+      const response = await axios.post(`http://localhost:8081/change-email?currentEmail=${stored.email}&newEmail=${newEmail} &currentPassword=${currentPassword}`,{
         email: newEmail,
         password: currentPassword,
+      },
+      {
+        headers: {
+          Authorization: authorizationToken,
+        },
       });
       if (response.status === 200) {
         toast.success("Email updated successfully!");
+        // Update localStorage and state
+        stored.email = newEmail;
+        localStorage.setItem("user", JSON.stringify(stored)); // Update the full user object
+        setCurrentEmail(newEmail);
         setActiveForm("logo");
+        setNewEmail("");
+        setCurrentPassword("");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred!");
     }
   };
-
-  // Handle code validation
+  const sendCode=async()=>{
+    const stored=JSON.parse(localStorage.getItem("user"));
+    try {
+      // Send a request to your backend to initiate the password reset process
+      const response = await axios.post(`http://localhost:8081/forgot-password?email=sangayt489@gmail.com`);
+console.log(stored.email)
+      if (response.status === 200) {
+        toast.success("Reset code sent to your email.");
+      }
+    } catch (error) {
+      toast.error("Failed to send reset email. Please try again.");
+    }
+  }
   const handleCodeValidation = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/verify-code", { code: verificationCode });
+      const response = await axios.post("/api/verify-code", {
+        code: verificationCode,
+      });
       if (response.status === 200) {
         toast.success("Verification successful!");
         setIsCodeValidated(true);
@@ -197,7 +235,6 @@ const Settings = () => {
     }
   };
 
-  // Handle password reset
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -213,7 +250,7 @@ const Settings = () => {
         toast.success("Password updated successfully!");
         setActiveForm("logo");
       }
-    } catch (error)      {
+    } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred!");
     }
   };
@@ -227,7 +264,8 @@ const Settings = () => {
             <div className="set_change">
               <div>
                 <h4 className="set_subtopic">Username</h4>
-                <p className="set_detail">{currentUsername}</p> {/* Displaying fetched username */}
+                <p className="set_detail">{currentUsername}</p>{" "}
+                {/* Displaying fetched username */}
               </div>
               <button
                 className="set_btn"
@@ -242,7 +280,8 @@ const Settings = () => {
             <div className="set_change">
               <div>
                 <h4 className="set_subtopic">Email</h4>
-                <p className="set_detail">{currentEmail}</p> {/* Displaying fetched email */}
+                <p className="set_detail">{currentEmail}</p>{" "}
+                {/* Displaying fetched email */}
               </div>
               <button
                 className="set_btn"
@@ -257,13 +296,15 @@ const Settings = () => {
             <div className="set_change">
               <div>
                 <h4 className="set_subtopic">Password</h4>
-                <p className="set_detail">***********</p> {/* Password is hidden */}
+                <p className="set_detail">***********</p>{" "}
+                {/* Password is hidden */}
               </div>
               <button
                 className="set_btn"
                 onClick={() => {
                   setActiveForm("password");
                   setIsCodeValidated(false);
+                  sendCode()
                 }}
               >
                 Change

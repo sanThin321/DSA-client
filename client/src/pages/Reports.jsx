@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfitAndRevenueChart from "../components/chart";
 import "./css/report.css";
 import Popup from "../components/popup";
+import { useStore } from "../context/Store";
+
 const Reports = () => {
   const data = [
     {
@@ -48,49 +50,42 @@ const Reports = () => {
   const [popupType, setPopupType] = useState(null);
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
+  const {
+    count,
+    refreshCategoryCount,
+    pcount,
+    refreshProductCount,
+    // Revenue_r,
+    // refreshrevenue,
+  } = useStore();
+  useEffect(() => {
+    refreshCategoryCount();
+    refreshProductCount();
+    // refreshrevenue()
+  }, []);
   return (
     <div>
       <div className="report">
         <div className="view">
           <h1 className="topic">Over View</h1>
           <div className="view_details">
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="totalP">Total Profit</p>
+            <div className="details">
+              <h3 className="Subtopic category">Categories</h3>
+              <p className="describeinN">{count}</p>
             </div>
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="Revenue">Revenue</p>
-            </div>
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="sale">Sales</p>
+            <div className="details">
+              <h3 className="Subtopic product">Total Products</h3>
+              <p className="describeinN">{pcount}</p>
             </div>
           </div>
           <div className="view_details">
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="des">Net sales value</p>
+            <div className="details">
+              <h3 className="Subtopic low">Low Stocks</h3>
+              <p className="describeinN ">12</p>
             </div>
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="des">Monthly Profit</p>
-            </div>
-            <div>
-              <p className="describeinN">
-                BTN <span>21,190</span>
-              </p>
-              <p className="des">Yearly Profit</p>
+            <div className="details">
+              <h3 className="Subtopic no">Not in Stocks</h3>
+              <p className="describeinN">2</p>
             </div>
           </div>
         </div>
