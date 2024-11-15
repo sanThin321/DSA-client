@@ -215,12 +215,16 @@ const Inventory = () => {
               <h3 className="Subtopic low">Low Stocks</h3>
               <div className="lowStock">
                 <div className="product">
-                  <p className="describeinN">12</p>
-                  <p className="describe">Low Stock</p>
+                  <p className="describeinN ">12</p>
                 </div>
+              </div>
+            </div>
+            <div className="Line" />
+            <div className="details">
+              <h3 className="Subtopic no">Not in Stocks</h3>
+              <div className="lowStock">
                 <div className="cost">
                   <p className="describeinN">2</p>
-                  <p className="describe">Not in stock</p>
                 </div>
               </div>
             </div>

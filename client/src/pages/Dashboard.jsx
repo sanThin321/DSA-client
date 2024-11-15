@@ -6,8 +6,6 @@ import sale3 from "../assets/sale3.svg";
 import sale4 from "../assets/sale4.svg";
 import insale1 from "../assets/insale1.svg";
 import junk1 from "../assets/junk1.svg";
-import junk2 from "../assets/junk1.svg";
-import junk3 from "../assets/junk1.svg";
 import BarChart from "../components/barChart";
 import Popup from "../components/popup";
 import axios from "axios";
@@ -18,17 +16,33 @@ import { useStore } from "../context/Store";
 const Dashboard = () => {
   const { authorizationToken } = useAuth();
   const { categories, refreshCategory } = useStore();
-
+  const [lowStockItems, setLowStockItems] = useState([]);
+  const [loading, setLoading] = useState(false);
   const data = [
     { name: "Surf Excel", sold: 30, remaining: 12, price: "BTN 100" },
     { name: "Rin", sold: 21, remaining: 15, price: "BTN 207" },
     { name: "Parle G", sold: 19, remaining: 17, price: "BTN 105" },
   ];
-  const items = [
-    { name: "Tata Salt", quantity: "10 Packet", status: "Low", img: junk1 },
-    { name: "Lays", quantity: "15 Packet", status: "Low", img: junk2 },
-    { name: "Lays", quantity: "15 Packet", status: "Low", img: junk3 },
-  ];
+  const fetchLowStockItems = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        "http://localhost:8081/api/stats/product/low-stock",
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setLowStockItems(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch low stock items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Function to delete a category by index
   const handleDelete = async (id) => {
@@ -58,6 +72,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     refreshCategory();
+    fetchLowStockItems();
   }, []);
 
   const handleAddCategory = async (e) => {
@@ -86,7 +101,6 @@ const Dashboard = () => {
         closePopup();
         refreshCategory();
       }
-    
     } catch (error) {
       toast.error("Category already exists.");
       setNewCategory("");
@@ -229,37 +243,53 @@ const Dashboard = () => {
               title="Low Quantity Stock"
               content={
                 <div>
-                  <div className="list-items">
-                    {items.map((item, index) => (
-                      <div key={index} className="list-item">
-                        <img
-                          src={item.img}
-                          alt={item.name}
-                          className="item-image"
-                        />
-                        <div className="item-details">
-                          <h4>{item.name}</h4>
-                          <p>Remaining Quantity: {item.quantity}</p>
-                        </div>
-                        <span className="item-status">{item.status}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {loading ? (
+                    <p>Loading...</p>
+                  ) : (
+                    <div className="list-items">
+                      {lowStockItems.length === 0 ? (
+                        <p>No low stock items found.</p>
+                      ) : (
+                        lowStockItems?.map((item, index) => (
+                          <div key={index} className="list-item">
+                            <img
+                              src={item.imageData || junk1}
+                              alt={item.name}
+                              className="item-image"
+                            />
+                            <div className="item-details">
+                              <h4>{item.name}</h4>
+                              <p>Remaining Quantity: {item?.quantity}</p>
+                            </div>
+                            <span className="item-status">Low</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </div>
               }
             />
           )}
           <div className="list-items">
-            {items.map((item, index) => (
-              <div key={index} className="list-item">
-                <img src={item.img} alt={item.name} className="item-image" />
-                <div className="item-details">
-                  <h4>{item.name}</h4>
-                  <p>Remaining Quantity: {item.quantity}</p>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              lowStockItems.map((item, index) => (
+                <div key={index} className="list-item">
+                  <img
+                    src={item.imageData || junk1}
+                    alt={item.name}
+                    className="item-image"
+                  />
+                  <div className="item-details">
+                    <h4>{item.name}</h4>
+                    <p>Remaining Quantity: {item.quantity}</p>
+                  </div>
+                  <span className="item-status">Low</span>
                 </div>
-                <span className="item-status">{item.status}</span>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
         <div className="grid-item item3">

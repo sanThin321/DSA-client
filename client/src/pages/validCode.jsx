@@ -18,12 +18,13 @@ const Valid = () => {
     }
 
     try {
-      // Replace with your actual endpoint for validating the code
-      const request = await axios.post("http://localhost:8081/validate-code", { code });
+      const email = localStorage.getItem("email")
+      const request = await axios.post(`http://localhost:8081/verify-code?email=${email}&code=${ code }`);
 
       if (request.status === 200) {
+        localStorage.setItem("code", code)
         toast.success("Code validated successfully.");
-        navigate("/resetpassword"); // Navigate to the reset password page
+        navigate("/resetpassword");
       }
     } catch (error) {
       if (error.response?.status === 401) {

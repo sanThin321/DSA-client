@@ -19,11 +19,12 @@ const ForgotPassword = () => {
 
     try {
       // Send a request to your backend to initiate the password reset process
-      const response = await axios.post("http://localhost:8081/forgot-password", { email });
+      const response = await axios.post(`http://localhost:8081/forgot-password?email=${ email }`);
 
       if (response.status === 200) {
         toast.success("Reset link sent to your email.");
-        navigate("/login"); // Redirect to login page after success
+        navigate("/validcode");
+        localStorage.setItem("email", email)
       }
     } catch (error) {
       toast.error("Failed to send reset email. Please try again.");
