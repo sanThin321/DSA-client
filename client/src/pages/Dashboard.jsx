@@ -92,7 +92,7 @@ const Dashboard = () => {
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const month = String(today.getMonth() + 1).padStart(2, "0"); 
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
@@ -167,9 +167,9 @@ const Dashboard = () => {
             <img src={sale1} width={45} alt="icon" />
             <div>
               <p className="mb-0">
-                <small>Revenue</small>
+                <small>Sales Count</small>
               </p>
-              <h5 className="">Nu. {totalRevenue}</h5>
+              <h5 className="">{salesCount}</h5>
             </div>
           </div>
           <div className="Hline" />
@@ -188,9 +188,9 @@ const Dashboard = () => {
             <img src={sale3} width={45} alt="icon" />
             <div>
               <p className="mb-0">
-                <small>Sales Count</small>
+                <small>Category</small>
               </p>
-              <h5 className="">{salesCount}</h5>
+              <h5 className="">{count}</h5>
             </div>
           </div>
           <div className="Hline" />
@@ -198,9 +198,9 @@ const Dashboard = () => {
             <img src={sale4} width={45} alt="icon" />
             <div>
               <p className="mb-0">
-                <small>Revenue</small>
+                <small>Products</small>
               </p>
-              <h5 className="">Nu. {totalRevenue}</h5>
+              <h5 className="">{pcount}</h5>
             </div>
           </div>
         </div>
