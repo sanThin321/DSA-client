@@ -310,7 +310,7 @@ const Settings = () => {
                   setIsCodeValidated(false);
                   sendCode();
                 }}
-              >
+              >{/*hello */}
                 Change
               </button>
             </div>
