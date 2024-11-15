@@ -11,6 +11,7 @@ const AddSales = () => {
   const { authorizationToken } = useAuth();
   const { products, refreshProducts } = useStore();
   const navigate = useNavigate();
+  const today = new Date().toISOString().split("T")[0];
 
   const [customerName, setCustomerName] = useState("");
   const [customerContact, setCustomerContact] = useState("");
@@ -144,9 +145,13 @@ const AddSales = () => {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   refreshProducts();
+  // }, [refreshProducts]);
+
+   useEffect(() => {
     refreshProducts();
-  }, [refreshProducts]);
+  }, []);
 
   return (
     <div className="add-sale-container">

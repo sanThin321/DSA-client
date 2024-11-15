@@ -18,11 +18,29 @@ const Dashboard = () => {
   const { categories, refreshCategory } = useStore();
   const [lowStockItems, setLowStockItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const data = [
-    { name: "Surf Excel", sold: 30, remaining: 12, price: "BTN 100" },
-    { name: "Rin", sold: 21, remaining: 15, price: "BTN 207" },
-    { name: "Parle G", sold: 19, remaining: 17, price: "BTN 105" },
-  ];
+  const [data, setData] = useState([]);
+
+  const getLowStockProducts = async (date) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8081/api/sale/top-selling-products-by-date/${date}`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        setData(res.data.products);
+      }
+
+      console.log("highest: ", data);
+    } catch (error) {
+      console.error("Error fetching low stock products: ", error);
+    }
+  };
+
   const fetchLowStockItems = async () => {
     setLoading(true);
     try {
@@ -44,7 +62,6 @@ const Dashboard = () => {
     }
   };
 
-  // Function to delete a category by index
   const handleDelete = async (id) => {
     try {
       const request = await axios.delete(
@@ -65,15 +82,25 @@ const Dashboard = () => {
     }
   };
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const currentDate = getCurrentDate();
   const [popupType, setPopupType] = useState(null);
   const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
 
   useEffect(() => {
+    getLowStockProducts(currentDate);
     refreshCategory();
     fetchLowStockItems();
-  }, []);
+  }, [currentDate]);
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
@@ -172,7 +199,7 @@ const Dashboard = () => {
         </div>
         <div className="grid-item item1">
           <h2 className={`topic ${isPopupOpen ? "" : "Scroll"}`}>
-            Top Selling Stock{" "}
+            Top Selling Products{" "}
             <span className="span" onClick={() => openPopup("TopSStock")}>
               see all
             </span>
@@ -187,19 +214,30 @@ const Dashboard = () => {
                   <table>
                     <thead>
                       <tr>
-                        <th>Name</th>
-                        <th>Sold Quantity</th>
+                        <th>Product</th>
+                        <th>Quantity Sold</th>
                         <th>Remaining Quantity</th>
-                        <th>Price</th>
+                        <th>Total Revenue (BTN)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {data.map((item, index) => (
                         <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{item.sold}</td>
-                          <td>{item.remaining}</td>
-                          <td>{item.price}</td>
+                          <td className="d-flex align-items-center">
+                            <img
+                              src={item.imageUrl}
+                              alt="product image"
+                              width={35}
+                            />
+                            <p className="mb-0">{item.productName}</p>
+                          </td>
+                          <td className="text-center">
+                            {item.totalQuantitySold}
+                          </td>
+                          <td className="text-center">
+                            {item.remainingQuantity}
+                          </td>
+                          <td className="text-center">{item.totalRevenue}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -211,19 +249,22 @@ const Dashboard = () => {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Sold Quantity</th>
+                <th>Product</th>
+                <th>Quantity Sold</th>
                 <th>Remaining Quantity</th>
-                <th>Price</th>
+                <th>Total Revenue (BTN)</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>{item.sold}</td>
-                  <td>{item.remaining}</td>
-                  <td>{item.price}</td>
+                  <td className="d-flex align-items-center">
+                    <img src={item.imageUrl} alt="product image" width={35} />
+                    <p className="mb-0">{item.productName}</p>
+                  </td>
+                  <td className="text-center">{item.totalQuantitySold}</td>
+                  <td className="text-center">{item.remainingQuantity}</td>
+                  <td className="text-center">{item.totalRevenue}</td>
                 </tr>
               ))}
             </tbody>
@@ -231,7 +272,7 @@ const Dashboard = () => {
         </div>
         <div className="grid-item item2">
           <h2 className={`topic ${isPopupOpen ? "" : "Scroll"}`}>
-            Low Quantity Stock{" "}
+            Low Quantity Products{" "}
             <span className="span" onClick={() => openPopup("lowQStock")}>
               see all
             </span>
@@ -253,9 +294,10 @@ const Dashboard = () => {
                         lowStockItems?.map((item, index) => (
                           <div key={index} className="list-item">
                             <img
-                              src={item.imageData || junk1}
+                              src={item.imageData}
                               alt={item.name}
                               className="item-image"
+                              width={30}
                             />
                             <div className="item-details">
                               <h4>{item.name}</h4>
