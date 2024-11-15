@@ -6,14 +6,13 @@
 }
 .inventory-detail{
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: space-around;
+    gap: 5px;
 }
 .Line{
     height: auto;
     width: 0.25%;
     background-color: rgb(250, 243, 243);
-    margin: 0 2% 0 2%;
 }
 .dayandRevenue, .productandcost, .lowStock{
     display: flex;
@@ -70,6 +69,9 @@
     }
     &.low{
         color: #F36960;
+    }
+    &.no{
+        color: red;
     }
 }
 .describeinN{
