@@ -10,7 +10,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Register the components with ChartJS
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,6 +20,7 @@ ChartJS.register(
 );
 
 const BarChart = () => {
+
   // Define your data for sales and revenue
   const data = {
     labels: [
@@ -61,15 +61,14 @@ const BarChart = () => {
     ],
   };
 
-  // Define options for the chart
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom", // Place the legend at the bottom
+        position: "bottom", 
         labels: {
-          usePointStyle: true, // Make the legend markers circular
-          pointStyle: "circle", // Set point style to circle
+          usePointStyle: true, 
+          pointStyle: "circle", 
         },
       },
       //   title: {
@@ -80,13 +79,13 @@ const BarChart = () => {
     scales: {
       x: {
         grid: {
-          display: false, // Remove the vertical grid lines
+          display: false, 
         },
       },
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 10000, // Step size for the y-axis
+          stepSize: 10000,
         },
       },
     },

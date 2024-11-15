@@ -17,22 +17,31 @@ const LoginPage = ({ onLogin }) => {
 
     const user = { username, password };
 
-    if (user.username === "" || user.password === "") {
-      toast.error("Fields cannot be empty.")
+    if (user.username.trim() === "" || user.password.trim() === "") {
+      toast.error("Fields cannot be empty.");
       return;
     }
 
     try {
-      const request = await axios.post("http://localhost:8081/login", user);
+      const response = await axios.post("http://localhost:8081/login", user);
 
-      if (request.status === 200) {
-        storeToken(request.data);
-        toast.success("Login successful.")
-        navigate("/")
+      if (response.status === 200) {
+        const { token, user: userData } = response.data;
+        storeToken(token);
+        localStorage.setItem("user", JSON.stringify(userData)); 
+
+        toast.success("Login successful.");
+        navigate("/");
+
+        if (onLogin) {
+          onLogin(userData);
+        }
       }
     } catch (error) {
-      if (error.status === 401) {
-        toast.error("Invalid username or password.")
+      if (error.response?.status === 401) {
+        toast.error("Invalid username or password.");
+      } else {
+        toast.error("An error occurred. Please try again later.");
       }
     }
   };
