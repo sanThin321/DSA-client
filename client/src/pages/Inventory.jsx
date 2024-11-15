@@ -15,7 +15,18 @@ import formatDate from "../utils/FormateDate";
 import { useStore } from "../context/Store";
 
 const Inventory = () => {
-  const { products, refreshProducts, categories, refreshCategory } = useStore();
+  const {
+    products,
+    refreshProducts,
+    categories,
+    refreshCategory,
+    count,
+    refreshCategoryCount,
+    pcount,
+    refreshProductCount,
+    // Revenue_r,
+    // refreshrevenue,
+  } = useStore();
   const navigate = useNavigate();
   const { authorizationToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +43,6 @@ const Inventory = () => {
     expirationDate: "",
     productAvailable: true,
   });
-
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -159,6 +169,9 @@ const Inventory = () => {
   useEffect(() => {
     refreshProducts();
     refreshCategory();
+    refreshCategoryCount();
+    refreshProductCount();
+    // refreshrevenue()
   }, []);
 
   return (
@@ -169,64 +182,22 @@ const Inventory = () => {
           <div className="inventory-detail">
             <div className="details">
               <h3 className="Subtopic category">Categories</h3>
-              <p className="describeinN">14</p>
-              <p className="describe">
-                Last <span>7</span> days
-              </p>
+              <p className="describeinN">{count}</p>
             </div>
-            <div className="Line" />
+            <div className="Hline" />
             <div className="details">
               <h3 className="Subtopic product">Total Products</h3>
-              <div className="dayandRevenue">
-                <div className="day">
-                  <p className="describeinN">868</p>
-                  <p className="describe">
-                    Last <span>7</span> days
-                  </p>
-                </div>
-                <div className="revenue">
-                  <p className="describeinN">
-                    BTN<span>14</span>
-                  </p>
-                  <p className="describe">Revenue</p>
-                </div>
-              </div>
+              <p className="describeinN">{pcount}</p>
             </div>
-            <div className="Line" />
-            <div className="details">
-              <h3 className="Subtopic top">Top Selling</h3>
-              <div className="productandcost">
-                <div className="product">
-                  <p className="describeinN">Maggi</p>
-                  <p className="describe">
-                    Last <span>7</span> days
-                  </p>
-                </div>
-                <div className="cost">
-                  <p className="describeinN">
-                    BTN<span>14</span>
-                  </p>
-                  <p className="describe">Cost</p>
-                </div>
-              </div>
-            </div>
-            <div className="Line" />
+            <div className="Hline" />
             <div className="details">
               <h3 className="Subtopic low">Low Stocks</h3>
-              <div className="lowStock">
-                <div className="product">
-                  <p className="describeinN ">12</p>
-                </div>
-              </div>
+              <p className="describeinN ">12</p>
             </div>
-            <div className="Line" />
+            <div className="Hline" />
             <div className="details">
               <h3 className="Subtopic no">Not in Stocks</h3>
-              <div className="lowStock">
-                <div className="cost">
-                  <p className="describeinN">2</p>
-                </div>
-              </div>
+              <p className="describeinN">2</p>
             </div>
           </div>
         </div>
@@ -373,7 +344,6 @@ const Inventory = () => {
                             type="number"
                             value={product.thresholdValue}
                             placeholder="Enter threshold value"
-
                             className="product-input"
                             onChange={handleInputChange}
                           />

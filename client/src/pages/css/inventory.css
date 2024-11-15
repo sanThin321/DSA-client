@@ -7,18 +7,11 @@
 .inventory-detail{
     display: flex;
     justify-content: space-around;
-    gap: 5px;
 }
 .Line{
     height: auto;
     width: 0.25%;
     background-color: rgb(250, 243, 243);
-}
-.dayandRevenue, .productandcost, .lowStock{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
 }
 .Container-item{
     background-color: white;
@@ -56,7 +49,7 @@
     padding: 5px 10px;
 }
 .Subtopic{
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     &.category{
         color: #1570EF;
@@ -75,17 +68,15 @@
     }
 }
 .describeinN{
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 23px;
+    font-weight: 800;
     color: #5D6679;
+    text-align: center;
 }
 .describe{
     font-size: 14px;
     font-weight: 400;
     color: #858D9D;
-}
-.day,.product{
-    margin-right: 40px;
 }
 .pan{
     display: flex;

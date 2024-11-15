@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       const response = await axios.post(`http://localhost:8081/forgot-password?email=${ email }`);
 
       if (response.status === 200) {
-        toast.success("Reset link sent to your email.");
+        toast.success("Reset code sent to your email.");
         navigate("/validcode");
         localStorage.setItem("email", email)
       }

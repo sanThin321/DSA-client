@@ -10,6 +10,69 @@ export const StoreProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sales, setSales] = useState([]);
+  const [count, setCount] = useState([]);
+  const [pcount, setpCount] = useState([]);
+  // const [Revenue_r, setRevenue] = useState([]);
+
+  const getcategoriescount=async()=>{
+    try {
+      const response = await axios.get("http://localhost:8081/api/stats/product/category/count", {
+        headers: {
+          Authorization: authorizationToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setCount(response.data);
+
+      }
+    } catch (error) {
+      toast.error("Could not fetch products.");
+    }
+  }
+  const refreshCategoryCount = () => {
+    getcategoriescount();
+  };
+  const getproductcount=async()=>{
+    try {
+      const response = await axios.get("http://localhost:8081/api/stats/product/count", {
+        headers: {
+          Authorization: authorizationToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setpCount(response.data);
+
+      }
+    } catch (error) {
+      toast.error("Could not fetch products.");
+    }
+  }
+  const refreshProductCount = () => {
+    getproductcount();
+  };
+
+  // const getrevenue=async()=>{
+  //   try {
+  //     const response = await axios.get("http://localhost:8081/api/stats/product/category-revenue", {
+  //       headers: {
+  //         Authorization: authorizationToken,
+  //       },
+  //     });
+
+  //     if (response.status === 200) {
+  //       setRevenue(response.data);
+
+  //     }
+  //   } catch (error) {
+  //     toast.error("Could not fetch products.");
+  //   }
+  // }
+  // const refreshrevenue = () => {
+  //   getrevenue();
+  // };
+
 
   const getAllProducts = async () => {
     try {
@@ -82,7 +145,13 @@ export const StoreProvider = ({ children }) => {
         categories,
         refreshCategory,
         sales,
-        refreshSales
+        refreshSales,
+        count,
+        refreshCategoryCount,
+        pcount,
+        refreshProductCount,
+        // Revenue_r,
+        // refreshrevenue
       }}
     >
       {children}

@@ -13,13 +13,16 @@
 }
 .view_details{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 .bsale{
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 40px;
+}
+.details{
+    text-align: center;
 }
 .view, .best, .profit,.selling{
     background-color: white;
