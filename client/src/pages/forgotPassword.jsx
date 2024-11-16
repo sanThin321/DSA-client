@@ -28,6 +28,7 @@ const ForgotPassword = () => {
         navigate("/validcode");
       }
     } catch (error) {
+      console.log(email)
       // Check for a response from the backend
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
