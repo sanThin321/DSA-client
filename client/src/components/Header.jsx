@@ -67,10 +67,11 @@ const Sidebar = ({ children }) => {
   return (
     <div className="Container">
       <div className={`sidebar ${isOpen ? "open" : "closed"} d-flex flex-column`}>
-        <div className="logo">
-          <img src={closeLogo} alt="" />
+        <div className="d-flex align-items-center gap-3 mb-0">
+          <img src={closeLogo} alt="logo" width={50}/>
           <p className={`logoText ${isOpen ? "show" : "hide"}`}>4 SALE</p>
         </div>
+        <hr className="mt-0"/>
 
         {/* Primary Menu */}
         <div className="menu-section">
@@ -138,7 +139,7 @@ const Sidebar = ({ children }) => {
             <FaBars onClick={toggle} />
           </div>
           <div className="Active">
-            <div className="header">
+            <div className="header me-4">
               <Breadcrumb />
             </div>
           </div>

@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./auth/auth.jsx";
 import { StoreProvider } from "./context/Store.jsx";
-
+import "./index.css"
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <StoreProvider>

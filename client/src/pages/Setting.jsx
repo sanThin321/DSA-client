@@ -16,17 +16,16 @@ const Settings = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const { authorizationToken } = useAuth();
-
-  // States to hold user data fetched from localStorage
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
 
-  // Fetch user details from localStorage when the component mounts
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     const stored = localStorage.getItem("user");
 
     if (stored) {
-      const user = JSON.parse(stored); // Assuming 'user' is a JSON string in localStorage
+      const user = JSON.parse(stored);
       setCurrentUsername(user.username);
       setCurrentEmail(user.email);
     } else {
@@ -38,105 +37,143 @@ const Settings = () => {
     switch (activeForm) {
       case "username":
         return (
-          <form className="form_container" onSubmit={handleUsernameUpdate}>
-            <h3>Change Username</h3>
-            <label>New Username</label>
-            <input
-              type="text"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              placeholder="Enter new username"
-              required
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
-            <button className="submit_btn" type="submit">
-              Update Username
-            </button>
+          <form className="" onSubmit={handleUsernameUpdate}>
+            <h5 className="mb-3">Change Username</h5>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="Enter new username"
+                required
+                className="form-control no-focus"
+                autoComplete="off"
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                autoComplete="off"
+                className="form-control no-focus"
+              />
+            </div>
+            <div className="d-flex justify-content-end mt-4">
+              <button className="btn btn-sm btn-primary" type="submit">
+                Update Username
+              </button>
+            </div>
           </form>
         );
 
       case "email":
         return (
-          <form className="form_container" onSubmit={handleEmailUpdate}>
-            <h3>Change Email</h3>
-            <label>New Email</label>
-            <input
-              type="email"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="Enter new email"
-              required
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
-            <button className="submit_btn" type="submit">
-              Update Email
-            </button>
+          <form onSubmit={handleEmailUpdate}>
+            <h5 className="mb-3">Change Email</h5>
+            <div className="mb-3">
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="Enter new email"
+                required
+                className="form-control no-focus"
+              />
+            </div>
+
+            <div className="mb-3">
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                className="form-control no-focus"
+              />
+            </div>
+            <div className="d-flex justify-content-end mt-4">
+              <button className="btn btn-sm btn-primary" type="submit">
+                Change Email
+              </button>
+            </div>
           </form>
         );
 
       case "password":
         if (isCodeValidated) {
           return (
-            <form className="form_container" onSubmit={handlePasswordReset}>
-              <h3>Reset Password</h3>
-              <label>Current Password</label>
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Enter current password"
-                required
-              />
-              <label>New Password</label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
-                required
-              />
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
-                required
-              />
-              <button className="submit_btn" type="submit">
-                Update Password
-              </button>
+            <form onSubmit={handlePasswordReset}>
+              <h5 className="mb-3">Reset Password</h5>
+              <div className="mb-3">
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  required
+                  className=" form-control no-focus"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="mb-3">
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  required
+                  className=" form-control no-focus"
+                  autoComplete="off"
+                />
+              </div>
+              <div className="mb-3">
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  required
+                  className=" form-control no-focus"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="d-flex justify-content-end mt-4">
+                <button className="btn btn-sm btn-primary" type="submit">
+                  Change Password
+                </button>
+              </div>
             </form>
           );
         }
         return (
           <form className="form_container" onSubmit={handleCodeValidation}>
-            <h3>Change Password</h3>
-            <label>Verification Code</label>
-            <input
-              type="text"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="Enter verification code"
-              required
-            />
-            <button className="submit_btn" type="submit">
-              Validate Code
-            </button>
+            <h5 className="mb-3">Change Password</h5>
+            <div className="border mb-3 p-2 rounded">
+              <p className="mb-0">
+                A verification code has been send to your email. Please check
+                your email.
+              </p>
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="Enter verification code"
+                required
+                className="form-control no-focus"
+              />
+            </div>
+            <div className="d-flex justify-content-end mt-4">
+              <button className="btn btn-sm btn-primary" type="submit">
+                Validate Code
+              </button>
+            </div>
           </form>
         );
 
@@ -167,7 +204,6 @@ const Settings = () => {
       );
       if (response.status === 200) {
         toast.success("Username updated successfully!");
-        // Update localStorage and state
         stored.username = newUsername;
         localStorage.setItem("user", JSON.stringify(stored)); // Update the full user object
         setCurrentUsername(newUsername);
@@ -198,9 +234,8 @@ const Settings = () => {
       );
       if (response.status === 200) {
         toast.success("Email updated successfully!");
-        // Update localStorage and state
         stored.email = newEmail;
-        localStorage.setItem("user", JSON.stringify(stored)); // Update the full user object
+        localStorage.setItem("user", JSON.stringify(stored));
         setCurrentEmail(newEmail);
         setActiveForm("logo");
         setNewEmail("");
@@ -210,11 +245,13 @@ const Settings = () => {
       toast.error(error.response?.data?.message || "An error occurred!");
     }
   };
+
   const sendCode = async () => {
     const stored = JSON.parse(localStorage.getItem("user"));
+    console.log(stored.email);
     try {
       const response = await axios.post(
-        `http://localhost:8081/forgot-password?email=${user.email}`
+        `http://localhost:8081/forgot-password?email=${stored.email}`
       );
       console.log(stored.email);
       if (response.status === 200) {
@@ -224,13 +261,15 @@ const Settings = () => {
       toast.error("Failed to send reset email. Please try again.");
     }
   };
+
   const handleCodeValidation = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/verify-code", {
-        code: verificationCode,
-      });
+      const response = await axios.post(
+        `http://localhost:8081/verify-code?code=${verificationCode}&email=${storedUser.email}`
+      );
       if (response.status === 200) {
+        localStorage.setItem("code", verificationCode);
         toast.success("Verification successful!");
         setIsCodeValidated(true);
       }
@@ -241,82 +280,106 @@ const Settings = () => {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
+
+    const code = localStorage.getItem("code");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!storedUser?.email || !code) {
+      toast.error("Invalid session or missing data. Please try again.");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
+
     try {
-      const response = await axios.post("/api/reset-password", {
-        currentPassword,
-        newPassword,
-      });
+      const response = await axios.post(
+        `http://localhost:8081/change-password`,
+        null, // No request body; only query parameters are used
+        {
+          params: {
+            email: storedUser.email,
+            code: code,
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          },
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
       if (response.status === 200) {
-        toast.success("Password updated successfully!");
+        toast.success("Password changed successfully!");
         setActiveForm("logo");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred!");
+      toast.error(
+        error.response?.data?.message || "An error occurred! Please try again."
+      );
     }
   };
 
   return (
-    <div className="set_container">
-      <h3 className="set_topic">Account Details</h3>
-      <div className="setting_container">
-        <div className="set_contain">
-          <div className="set_account">
-            <div className="set_change">
-              <div>
-                <p className="mb-0">Username</p>
-                <h5 className="">{currentUsername}</h5>{" "}
-                {/* Displaying fetched username */}
-              </div>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setActiveForm("username");
-                  setIsCodeValidated(false);
-                }}
-              >
-                Change
-              </button>
+    <div className="set_container p-3">
+      <h4>Account Details</h4>
+      <div className="row mt-4 px-3 gap-3">
+        <div className="col-5 border rounded p-3">
+          <div className="set_change">
+            <div>
+              <p className="mb-0">Username</p>
+              <h5 className="">{currentUsername}</h5>{" "}
             </div>
-            <div className="set_change">
-              <div>
-                <p className="mb-0">Email</p>
-                <h5 className="">{currentEmail}</h5>{" "}
-                {/* Displaying fetched email */}
-              </div>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setActiveForm("email");
-                  setIsCodeValidated(false);
-                }}
-              >
-                Change
-              </button>
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => {
+                setActiveForm("username");
+                setIsCodeValidated(false);
+              }}
+            >
+              Change
+            </button>
+          </div>
+          <div className="set_change">
+            <div>
+              <p className="mb-0">Email</p>
+              <h5 className="">{currentEmail}</h5>{" "}
             </div>
-            <div className="set_change">
-              <div>
-                <p className="mb-0">Password</p>
-                <h5 className="">***********</h5>{" "}
-                {/* Password is hidden */}
-              </div>{/**/}
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setActiveForm("password");
-                  setIsCodeValidated(false);
-                  sendCode();
-                }}
-              >{/*hello */}
-                Change
-              </button>
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => {
+                setActiveForm("email");
+                setIsCodeValidated(false);
+              }}
+            >
+              Change
+            </button>
+          </div>
+          <div className="set_change">
+            <div>
+              <p className="mb-0">Password</p>
+              <h5 className="">***********</h5> {/* Password is hidden */}
             </div>
+            {/**/}
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => {
+                setActiveForm("password");
+                setIsCodeValidated(false);
+                sendCode();
+              }}
+            >
+              {/*hello */}
+              Change
+            </button>
           </div>
         </div>
-        <div className="set_contain form_side">{renderForm()}</div>
+
+        <div className="col-6">
+          <div className="border rounded p-3 w-75 h-100">{renderForm()}</div>
+        </div>
       </div>
     </div>
   );

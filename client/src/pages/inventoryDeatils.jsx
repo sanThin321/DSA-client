@@ -194,17 +194,7 @@ const ProductDetail = () => {
                           className="product-input"
                         />
                       </div>
-                      <div className="product-field">
-                        <label htmlFor="unit" className="field-name">
-                          Unit
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter product unit"
-                          required
-                          className="product-input"
-                        />
-                      </div>
+                      
                       <div className="product-field">
                         <label htmlFor="expire" className="field-name">
                           Expiry Date
@@ -288,7 +278,7 @@ const ProductDetail = () => {
               <h4 className="prTopic">Stock</h4>
               <li className="detail">
                 Remaining Stock{" "}
-                <span>{product.quantity + " " + product.unit}</span>
+                <span>{product.quantity}</span>
               </li>
             </div>
             <div>

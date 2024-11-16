@@ -1,0 +1,19 @@
+.on-hover:hover{
+    background-color: #eefaff;;
+}
+
+.outOfStock {
+   background-color:  #fadfe1;
+   color: red;
+}
+
+.inStock {
+    background-color: #defce1;
+    color: green;
+}
+
+.no-focus:focus {
+    outline: none; /* Removes the blue outline */
+    box-shadow: none; /* Removes the Bootstrap box-shadow */
+  }
+  

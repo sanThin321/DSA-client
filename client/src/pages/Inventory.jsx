@@ -13,6 +13,11 @@ import defaultImage from "../assets/image.gif";
 import loadingImage from "../assets/loadingdots2.gif";
 import formatDate from "../utils/FormateDate";
 import { useStore } from "../context/Store";
+import sale1 from "../assets/sale1.svg";
+import sale2 from "../assets/sale2.svg";
+import sale3 from "../assets/sale3.svg";
+import sale4 from "../assets/sale4.svg";
+import insale1 from "../assets/insale1.svg";
 
 const Inventory = () => {
   const {
@@ -20,12 +25,14 @@ const Inventory = () => {
     refreshProducts,
     categories,
     refreshCategory,
-    count,
-    refreshCategoryCount,
     pcount,
     refreshProductCount,
-    // Revenue_r,
-    // refreshrevenue,
+    totalRevenue,
+    refreshOutOfStockCount,
+    outOfStock,
+    refreshLowStock,
+    lowStock,
+    refreshTotalRevenue,
   } = useStore();
   const navigate = useNavigate();
   const { authorizationToken } = useAuth();
@@ -36,7 +43,6 @@ const Inventory = () => {
   const [product, setProduct] = useState({
     name: "",
     quantity: 0,
-    unit: "",
     price: 0,
     category: "",
     thresholdValue: 0,
@@ -113,10 +119,7 @@ const Inventory = () => {
       toast.error("Quantity must be greater than 0!");
       return;
     }
-    if (!product.unit.trim()) {
-      toast.error("Unit is required!");
-      return;
-    }
+
     if (!product.price || product.price <= 0) {
       toast.error("Price must be greater than 0!");
       return;
@@ -169,247 +172,290 @@ const Inventory = () => {
   useEffect(() => {
     refreshProducts();
     refreshCategory();
-    refreshCategoryCount();
     refreshProductCount();
-    // refreshrevenue()
+    refreshOutOfStockCount();
+    refreshLowStock();
+    refreshTotalRevenue();
   }, []);
 
   return (
-    <div>
+    <div style={{height: "100vh"}}>
       <div className="incontainer">
-        <div className="Container-item iT-1">
-          <h2 className="topic">Overall Inventory</h2>
-          <div className="inventory-detail">
-            <div className="details">
-              <h3 className="Subtopic category">Categories</h3>
-              <p className="describeinN">{count}</p>
+        <div className="bg-white rounded p-3 d-flex justify-content-between align-items-center">
+          <div className="d-flex gap-3">
+            <img src={sale3} width={43} alt="icon" />
+            <div>
+              <h5 className="mb-0">{pcount}</h5>
+
+              <p className="mb-0">
+                <small>Total Products</small>
+              </p>
             </div>
-            <div className="Hline" />
-            <div className="details">
-              <h3 className="Subtopic product">Total Products</h3>
-              <p className="describeinN">{pcount}</p>
+          </div>
+          <div className="Hline" />
+          <div className="d-flex gap-3">
+            <img src={sale2} alt="icon" width={43} />
+            <div>
+              <h5 className="mb-0">Nu {totalRevenue}</h5>
+              <p className="mb-0">
+                <small>Revenue</small>
+              </p>
             </div>
-            <div className="Hline" />
-            <div className="details">
-              <h3 className="Subtopic low">Low Stocks</h3>
-              <p className="describeinN ">12</p>
+          </div>
+
+          <div className="Hline" />
+          <div className="d-flex gap-2">
+            <img src={insale1} width={43} alt="icon" />
+            <div>
+              <h5 className="mb-0">{lowStock.length}</h5>
+              <p className="mb-0">
+                <small>Low Stock</small>
+              </p>
             </div>
-            <div className="Hline" />
-            <div className="details">
-              <h3 className="Subtopic no">Not in Stocks</h3>
-              <p className="describeinN">2</p>
+          </div>
+          <div className="Hline" />
+          <div className="d-flex gap-3">
+            <img src={insale1} width={43} alt="icon" />
+            <div>
+              <h5 className="mb-0">{outOfStock}</h5>
+
+              <p className="mb-0">
+                <small>Out of Stock</small>
+              </p>
             </div>
           </div>
         </div>
-        <div className="Container-item iT-2">
-          <h2 className="topic search-1">
-            Products
-            <span className="pan">
-              <span
-                className="addButton"
-                onClick={() => openPopup("addProduct")}
-              >
-                AddButton
-              </span>
-              {popupType === "addProduct" && (
-                <Popup
-                  show={true}
-                  onClose={closePopup}
-                  title="New Product"
-                  size="small"
-                  content={
-                    <div>
-                      <form onSubmit={handleAddProduct}>
-                        <div className="Image-form">
-                          <input
-                            type="file"
-                            id="file"
-                            className="imagefile"
-                            accept="image/*"
-                            // onChange={handleImageChange}
-                            onChange={handleImageChange}
-                          />
-                          <label htmlFor="file" className="uploadImage">
-                            {previewUrl ? (
-                              <img
-                                id="preview"
-                                src={previewUrl}
-                                alt="Selected"
-                                className="fit-image"
-                              />
-                            ) : (
-                              <img
-                                src={defaultImage}
-                                alt="Default"
-                                className="fit-image"
-                              /> // Use the imported default image
-                            )}
-                          </label>
-                          <span className="img-des">Browse image</span>
-                        </div>
-                        <div className="product-field">
-                          <label htmlFor="product" className="field-name">
-                            Product Name
-                          </label>
-                          <input
-                            name="name"
-                            value={product.name}
-                            type="text"
-                            placeholder="Enter product name"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
+        <div className="Container-item iT-2 p-3">
+          <div className="d-flex justify-content-between align-items-center py-0 mb-3">
+            <h4 className="py-0">Products</h4>
+            <div>
+              <div className="d-flex gap-3 py-0">
+                <button
+                  className="btn btn-primary py-0"
+                  onClick={() => openPopup("addProduct")}
+                >
+                  Add Product
+                </button>
+                {popupType === "addProduct" && (
+                  <Popup
+                    show={true}
+                    onClose={closePopup}
+                    title="Add New Product"
+                    size="small"
+                    content={
+                      <div style={{zIndex: "100"}}>
+                        <form onSubmit={handleAddProduct}>
+                          <div className="product-field">
+                            <label htmlFor="product" className="field-name">
+                              Product Name
+                            </label>
+                            <input
+                              name="name"
+                              value={product.name}
+                              type="text"
+                              placeholder="Enter product name"
+                              className="product-input"
+                              onChange={handleInputChange}
+                              autoComplete="off"
+                            />
+                          </div>
 
-                        <div className="product-field">
-                          <label htmlFor="category" className="field-name">
-                            Category
-                          </label>
-                          <select
-                            className="product-input selectPlaceholder"
-                            value={product.category}
-                            onChange={handleInputChange}
-                            name="category"
-                            id="category"
-                          >
-                            <option value="">Select category</option>
-                            {categories.map((category) => {
-                              return (
-                                <option value={category.name}>
-                                  {category.name}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        </div>
+                          <div className="product-field">
+                            <label htmlFor="category" className="field-name">
+                              Category
+                            </label>
+                            <select
+                              className="product-input selectPlaceholder"
+                              value={product.category}
+                              onChange={handleInputChange}
+                              name="category"
+                              id="category"
+                            >
+                              <option value="">Select category</option>
+                              {categories.map((category) => {
+                                return (
+                                  <option value={category.name}>
+                                    {category.name}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </div>
 
-                        <div className="product-field">
-                          <label htmlFor="buy" className="field-name">
-                            Buying Price
-                          </label>
-                          <input
-                            name="price"
-                            value={product.price}
-                            type="number"
-                            placeholder="Enter buying price"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="product-field">
-                          <label htmlFor="quantity" className="field-name">
-                            Quantity
-                          </label>
-                          <input
-                            name="quantity"
-                            value={product.quantity}
-                            type="text"
-                            placeholder="Enter product quantity"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="product-field">
-                          <label htmlFor="unit" className="field-name">
-                            Unit
-                          </label>
-                          <input
-                            name="unit"
-                            value={product.unit}
-                            type="text"
-                            placeholder="Enter product unit"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="product-field">
-                          <label htmlFor="expire" className="field-name">
-                            Expiry Date
-                          </label>
-                          <input
-                            name="expirationDate"
-                            value={product.expirationDate}
-                            type="date"
-                            placeholder="Enter expiry date"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="product-field">
-                          <label htmlFor="threshold" className="field-name">
-                            Threshold Value
-                          </label>
-                          <input
-                            name="thresholdValue"
-                            type="number"
-                            value={product.thresholdValue}
-                            placeholder="Enter threshold value"
-                            className="product-input"
-                            onChange={handleInputChange}
-                          />
-                        </div>
+                          <div className="product-field">
+                            <label htmlFor="buy" className="field-name">
+                              Buying Price
+                            </label>
+                            <input
+                              name="price"
+                              value={product.price}
+                              type="text"
+                              placeholder="Enter buying price"
+                              className="product-input"
+                              onChange={handleInputChange}
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div className="product-field">
+                            <label htmlFor="quantity" className="field-name">
+                              Quantity
+                            </label>
+                            <input
+                              name="quantity"
+                              value={product.quantity}
+                              type="text"
+                              placeholder="Enter product quantity"
+                              className="product-input"
+                              onChange={handleInputChange}
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div className="product-field">
+                            <label htmlFor="expire" className="field-name">
+                              Expiry Date
+                            </label>
+                            <input
+                              name="expirationDate"
+                              value={product.expirationDate}
+                              type="date"
+                              placeholder="Enter expiry date"
+                              className="product-input"
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="product-field">
+                            <label htmlFor="threshold" className="field-name">
+                              Threshold Value
+                            </label>
+                            <input
+                              name="thresholdValue"
+                              type="number"
+                              value={product.thresholdValue}
+                              placeholder="Enter threshold value"
+                              className="product-input "
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="Image-form">
+                            <input
+                              type="file"
+                              id="file"
+                              className="imagefile"
+                              accept="image/*"
+                              onChange={handleImageChange}
+                            />
+                            <label htmlFor="file" className="uploadImage">
+                              {previewUrl ? (
+                                <img
+                                  id="preview"
+                                  src={previewUrl}
+                                  alt="Selected"
+                                  className="fit-image"
+                                />
+                              ) : (
+                                <img
+                                  src={defaultImage}
+                                  alt="Default"
+                                  className="fit-image"
+                                /> // Use the imported default image
+                              )}
+                            </label>
+                            <span className="img-des">Browse image</span>
+                          </div>
 
-                        <div className="Return">
-                          <button
-                            className="send cancel re"
-                            type="cancel"
-                            onClick={closePopup}
-                          >
-                            Discard
-                          </button>
-                          <button className="send add re" type="submit">
-                            Add Category
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  }
-                  hideCloseButton={true}
-                />
-              )}
-              <span className="search">
-                <span>
-                  <FaSearch className="icon-search" />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search product..."
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-              </span>
+                          <div className="Return">
+                            <button
+                              className="btn btn-sm"
+                              type="cancel"
+                              onClick={closePopup}
+                            >
+                              Discard
+                            </button>
+                            <button
+                              className="btn btn-sm btn-primary"
+                              type="submit"
+                            >
+                              Add Product
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    }
+                    hideCloseButton={true}
+                  />
+                )}
+                <div className="d-flex align-items-center">
+                  <input
+                    type="search"
+                    placeholder="Search product..."
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="form-control form-control-sm no-focus"
+                  />
+                </div>
 
-              {/* Filter by Availability */}
-              <span className="select">
-                <div className="filter-dropdown">
-                  <button
-                    className={`dropdown-tog ${
-                      isPopupOpen ? "disable-dropdown-tog" : ""
-                    }`}
-                  >
-                    <img src={filter} alt="" className="image-filter" />
-                    {selectedAvailability || "Filter"}
-                  </button>
-                  <ul
-                    className={`dropdown-men ${
+                <span className="select">
+                  <div
+                    className={`dropdown ${
                       isPopupOpen ? "disable-dropdown" : ""
                     }`}
                   >
-                    <li onClick={() => setSelectedAvailability("")}>All</li>
-                    <li onClick={() => setSelectedAvailability("In-stock")}>
-                      In-stock
-                    </li>
-                    <li onClick={() => setSelectedAvailability("Out of stock")}>
-                      Out of stock
-                    </li>
-                    <li onClick={() => setSelectedAvailability("Low stock")}>
-                      Low stock
-                    </li>
-                  </ul>
-                </div>
-              </span>
-            </span>
-          </h2>
+                    <button
+                      className={`btn btn-sm border border-secondary dropdown-toggle ${
+                        isPopupOpen ? "disable-dropdown-tog" : ""
+                      }`}
+                      type="button "
+                      id="filterDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img src={filter} alt="" className="image-filter" />
+                      {selectedAvailability || "Filter"}
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="filterDropdown"
+                    >
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => setSelectedAvailability("")}
+                        >
+                          All
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => setSelectedAvailability("In-stock")}
+                        >
+                          In-stock
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() =>
+                            setSelectedAvailability("Out of stock")
+                          }
+                        >
+                          Out of stock
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => setSelectedAvailability("Low stock")}
+                        >
+                          Low stock
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead className="head">
               <tr>
@@ -457,12 +503,16 @@ const Inventory = () => {
                     <td>{product.quantity}</td>
                     <td>{product.thresholdValue}</td>
                     <td>{formatDate(product.expirationDate)}</td>
-                    <td
-                      className={
-                        product.productAvailable ? "instock" : "outofstock"
-                      }
-                    >
-                      {product.productAvailable ? "Available" : "Out of stock"}
+                    <td>
+                      <p
+                        className={`mb-0 py-1 rounded px-0 w-75 ${
+                          product.quantity > 0
+                            ? "instock inStock"
+                            : "outofstock outOfStock"
+                        }`}
+                      >
+                        {product.quantity > 0 ? "Available" : "Out of stock"}
+                      </p>
                     </td>
                   </tr>
                 ))
@@ -478,27 +528,26 @@ const Inventory = () => {
               )}
             </tbody>
           </table>
-
-          {/* Pagination controls */}
-          <div className="Btn">
-            <span
-              className="Btn-shape"
+          {/* <hr /> */}
+          <div className="text-end mt-3 d-flex justify-content-end gap-3">
+            <button
+              className="btn btn-sm"
               onClick={handlePrevPage}
               disabled={currentPage === 1}
             >
               Previous
-            </span>
+            </button>
             <span>
               {" "}
               Page {currentPage} of {totalPages}{" "}
             </span>
-            <span
-              className="Btn-shape"
+            <button
+              className="btn btn-sm"
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
             >
               Next
-            </span>
+            </button>
           </div>
         </div>
       </div>
