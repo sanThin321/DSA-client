@@ -11,32 +11,32 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
 
-    if (email.trim() === "") {
-      toast.error("Email field cannot be empty.");
-      return;
+    if (normalizedEmail === "") {
+        toast.error("Email field cannot be empty.");
+        return;
     }
 
     try {
-      const response = await axios.post(
-        `http://localhost:8081/forgot-password?email=${email}`
-      );
+        const response = await axios.post(
+            `http://localhost:8081/forgot-password?email=${normalizedEmail}`
+        );
 
-      if (response.status === 200) {
-        toast.success("Reset code sent to your email.");
-        localStorage.setItem("email", email);
-        navigate("/validcode");
-      }
+        if (response.status === 200) {
+            toast.success("Reset code sent to your email.");
+            localStorage.setItem("email", normalizedEmail);
+            navigate("/validcode");
+        }
     } catch (error) {
-      console.log(email)
-      // Check for a response from the backend
-      if (error.response && error.response.data && error.response.data.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Failed to send reset email. Please try again.");
-      }
+        if (error.response?.data?.message) {
+            toast.error(error.response.data.message);
+        } else {
+            toast.error("Failed to send reset email. Please try again.");
+        }
     }
-  };
+};
+
 
   return (
     <div className="LoginContainer">

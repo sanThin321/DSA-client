@@ -32,7 +32,6 @@ const AddSales = () => {
   const handleSaleChange = (e) => {
     const { name, value } = e.target;
 
-    // Prevent quantity from being less than 1
     if (name === "quantity" && value < 1) return;
 
     // Update sale details
@@ -149,19 +148,20 @@ const AddSales = () => {
   //   refreshProducts();
   // }, [refreshProducts]);
 
-   useEffect(() => {
+  useEffect(() => {
     refreshProducts();
   }, []);
 
   return (
-    <div className="add-sale-container">
-      <h2 className="topic">Add new sale details</h2>
+    <div className="add-sale-container p-3">
+      <h2 className="topic mb-3">Add New Sale</h2>
       <form onSubmit={handleSubmit}>
         <div className="customer_details">
           <div className="d-flex flex-column">
             <label>Customer Name</label>
             <input
               type="text"
+              className="form-control no-focus"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               required
@@ -174,6 +174,7 @@ const AddSales = () => {
               value={customerContact}
               onChange={(e) => setCustomerContact(e.target.value)}
               required
+              className="form-control no-focus"
             />
           </div>
           <div>
@@ -184,6 +185,7 @@ const AddSales = () => {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
+              className="form-control no-focus"
             />
           </div>
         </div>
@@ -275,7 +277,7 @@ const AddSales = () => {
                           className="but but-delete"
                           onClick={() => {
                             const updatedSales = [...sales];
-                            updatedSales.splice(index, 1); // Remove the sale
+                            updatedSales.splice(index, 1);
                             setSales(updatedSales);
                           }}
                         >
@@ -292,7 +294,7 @@ const AddSales = () => {
                       <td>{sale.totalPrice}</td>
                       <td>
                         <button
-                          className="but but-edit"
+                          className="btn btn-sm"
                           onClick={() => {
                             const updatedSales = [...sales];
                             updatedSales[index].isEditing = true;
@@ -302,7 +304,7 @@ const AddSales = () => {
                           Edit
                         </button>
                         <button
-                          className="but but-delete"
+                          className="btn btn-sm"
                           onClick={() => {
                             const updatedSales = [...sales];
                             updatedSales.splice(index, 1); // Remove the sale
@@ -317,7 +319,6 @@ const AddSales = () => {
                 </tr>
               ))}
 
-              {/* Add new sale row */}
               <tr>
                 <td>
                   <select
@@ -362,8 +363,12 @@ const AddSales = () => {
                 <td>{selectedProduct ? selectedProduct.price : sale.price}</td>
                 <td>{sale.totalPrice}</td>
                 <td>
-                  <button type="button" className="but but-add"onClick={addSaleToList}>
-                    + Add
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary"
+                    onClick={addSaleToList}
+                  >
+                    + Add Product
                   </button>
                 </td>
               </tr>
@@ -371,41 +376,44 @@ const AddSales = () => {
           </table>
         </div>
 
-        <div className="net-total">
-          <h3 className="topic">Net Total Amount BTN: {calculateNetTotal()}</h3>
-        </div>
+        <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
+          <div className="net-total">
+            <p >Net Total Amount BTN: {calculateNetTotal()}</p>
+          </div>
 
-        <div className="payment-method">
-          <select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          >
-            <option value="">Select Payment Method</option>
-            <option value="cash">Cash</option>
-            <option value="online">Online Payment</option>
-          </select>
-          {paymentMethod === "online" && (
-            <div className="journal-number">
-              <label>Journal Number</label>
-              <input
-                type="text"
-                placeholder="Enter Journal Number"
-                value={journalNumber}
-                onChange={(e) => setJournalNumber(e.target.value)}
-              />
-            </div>
-          )}
+          <div className="payment-method ">
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="border rounded px-2 py-1 border-secondary"
+            >
+              <option value="">Select Payment Method</option>
+              <option value="cash">Cash</option>
+              <option value="online">Online Payment</option>
+            </select>
+            {paymentMethod === "online" && (
+              <div className="journal-number">
+                <input
+                  type="text"
+                  className="form-control form-control-sm no-focus"
+                  placeholder="Enter Journal Number"
+                  value={journalNumber}
+                  onChange={(e) => setJournalNumber(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
         </div>
-
-        <div className="action1">
+        <hr />
+        <div className="action1 mt-3">
           <button
             type="button"
-            className="discard-btn"
+            className="btn btn-sm"
             onClick={() => navigate("/sales")}
           >
             Discard
           </button>
-          <button type="submit" className="add-sale-btn">
+          <button type="submit" className="btn btn-sm btn-primary">
             Add Sale
           </button>
         </div>

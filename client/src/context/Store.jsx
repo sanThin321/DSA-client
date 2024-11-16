@@ -14,6 +14,8 @@ export const StoreProvider = ({ children }) => {
   const [pcount, setpCount] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [salesCount, setSalesCount] = useState(0);
+  const [outOfStock, setOutOfStock] = useState(0);
+  const [lowStock, setLowStock] = useState([]);
 
   const getcategoriescount = async () => {
     try {
@@ -30,7 +32,7 @@ export const StoreProvider = ({ children }) => {
         setCount(response.data);
       }
     } catch (error) {
-      toast.error("Could not fetch products.");
+      console.error("Could not fetch category count.");
     }
   };
 
@@ -53,7 +55,7 @@ export const StoreProvider = ({ children }) => {
         setpCount(response.data);
       }
     } catch (error) {
-      toast.error("Could not fetch products.");
+      console.error("Could not fetch product count.");
     }
   };
   const refreshProductCount = () => {
@@ -76,7 +78,7 @@ export const StoreProvider = ({ children }) => {
         setTotalRevenue(response.data);
       }
     } catch (error) {
-      toast.error("Could not fetch products.");
+      console.error("Could not fetch total revenue.");
     }
   };
 
@@ -96,7 +98,27 @@ export const StoreProvider = ({ children }) => {
         setSalesCount(response.data);
       }
     } catch (error) {
-      toast.error("Could not fetch products.");
+      console.error("Could not fetch sales count.");
+    }
+  };
+
+  const getOutOfStockCount = async () => {
+    try {
+
+      const response = await axios.get(
+        `http://localhost:8081/api/stats/product/out-of-stock-count`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setOutOfStock(response.data);
+      }
+    } catch (error) {
+      console.error("Could not fetch out of stock products count.");
     }
   };
 
@@ -107,6 +129,10 @@ export const StoreProvider = ({ children }) => {
 
   const refreshSalesCount = () => {
     getSalesCount();
+  };
+
+  const refreshOutOfStockCount = () => {
+    getOutOfStockCount();
   };
 
   const getAllProducts = async () => {
@@ -122,7 +148,7 @@ export const StoreProvider = ({ children }) => {
         console.log(response.data);
       }
     } catch (error) {
-      toast.error("Could not fetch products.");
+      console.error("Could not fetch products.");
     }
   };
 
@@ -172,6 +198,27 @@ export const StoreProvider = ({ children }) => {
     getSales();
   };
 
+  const fetchLowStockItems = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8081/api/stats/product/low-stock",
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setLowStock(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch low stock items:", error);
+    } 
+  };
+
+  const refreshLowStock = () => {
+    fetchLowStockItems();
+  }
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -179,6 +226,7 @@ export const StoreProvider = ({ children }) => {
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+
   return (
     <StoreContext.Provider
       value={{
@@ -195,7 +243,11 @@ export const StoreProvider = ({ children }) => {
         refreshTotalRevenue,
         totalRevenue,
         refreshSalesCount,
-        salesCount
+        salesCount,
+        refreshOutOfStockCount,
+        outOfStock,
+        lowStock,
+        refreshLowStock
       }}
     >
       {children}

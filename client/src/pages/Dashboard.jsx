@@ -22,6 +22,8 @@ const Dashboard = () => {
     totalRevenue,
     refreshSalesCount,
     salesCount,
+    refreshOutOfStockCount,
+    outOfStock,
   } = useStore();
   const [lowStockItems, setLowStockItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -92,7 +94,7 @@ const Dashboard = () => {
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0"); 
+    const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
@@ -102,20 +104,15 @@ const Dashboard = () => {
   const [newCategory, setNewCategory] = useState("");
   const openPopup = (type) => setPopupType(type);
   const closePopup = () => setPopupType(null);
-  const {
-    count,
-    refreshCategoryCount,
-    pcount,
-    refreshProductCount,
-    // Revenue_r,
-    // refreshrevenue,
-  } = useStore();
+  const { count, refreshCategoryCount, pcount, refreshProductCount } =
+    useStore();
 
   useEffect(() => {
     refreshCategoryCount();
     refreshProductCount();
     refreshTotalRevenue();
     refreshSalesCount();
+    refreshOutOfStockCount();
   }, []);
 
   useEffect(() => {
@@ -163,57 +160,73 @@ const Dashboard = () => {
     <div>
       <div className="container1">
         <div className="bg-white rounded p-3 d-flex justify-content-between align-items-center">
-          <div className="d-flex gap-2">
-            <img src={sale1} width={45} alt="icon" />
+          <div className="d-flex gap-3">
+            <img src={sale1} width={43} alt="icon" />
             <div>
+              <h5 className="mb-0">{salesCount}</h5>
+
               <p className="mb-0">
                 <small>Sales Count</small>
               </p>
-              <h5 className="">{salesCount}</h5>
             </div>
           </div>
           <div className="Hline" />
-          <div className="d-flex gap-2">
-            <img src={sale2} alt="icon" width={45} />
+          <div className="d-flex gap-3">
+            <img src={sale2} alt="icon" width={43} />
 
             <div>
+              <h5 className="mb-0">Nu {totalRevenue}</h5>
+
               <p className="mb-0">
                 <small>Revenue</small>
               </p>
-              <h5 className="">Nu. {totalRevenue}</h5>
             </div>
           </div>
           <div className="Hline" />
-          <div className="d-flex gap-2">
-            <img src={sale3} width={45} alt="icon" />
+          <div className="d-flex gap-3">
+            <img src={sale3} width={43} alt="icon" />
             <div>
+              <h5 className="mb-0">{count}</h5>
+
               <p className="mb-0">
                 <small>Category</small>
               </p>
-              <h5 className="">{count}</h5>
             </div>
           </div>
           <div className="Hline" />
           <div className="d-flex gap-2">
-            <img src={sale4} width={45} alt="icon" />
+            <img src={sale4} width={43} alt="icon" />
             <div>
+              <h5 className="mb-0">{pcount}</h5>
+
               <p className="mb-0">
                 <small>Products</small>
               </p>
-              <h5 className="">{pcount}</h5>
             </div>
           </div>
         </div>
         <div className="contain2 p-3 d-flex justify-content-between">
-          <div className="inner">
-            {/* <img src={insale1} alt="icon" /> */}
-            <h3>{pcount}</h3>
-            <p>Number of Products</p>
+          <div className="d-flex align-items-center gap-3">
+            <img src={insale1} alt="icon" width={43} />
+            <div>
+              <h4 className="mb-0">{lowStockItems.length}</h4>
+
+              <p className="mb-0">
+                <small>Low Stock</small>
+              </p>
+            </div>
           </div>
           <div className="Hline" />
-          <div className="text-center">
-            <h3>{count}</h3>
-            <p>Number of Category</p>
+
+          <div className="d-flex align-items-center gap-3">
+            <img src={insale1} alt="icon" width={43} />
+            <div>
+              <h4 className="mb-0">{outOfStock}</h4>
+
+              <p className="mb-0">
+                <small>Out of Stock</small>
+              </p>
+            </div>
           </div>
         </div>
         <div className="grid-item item1">
@@ -241,7 +254,7 @@ const Dashboard = () => {
                     </thead>
                     <tbody>
                       {data.map((item, index) => (
-                        <tr key={index}>
+                        <tr key={index} className="on-hover rounded">
                           <td className="d-flex align-items-center">
                             <img
                               src={item.imageUrl}
@@ -275,7 +288,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => (
+              {data.slice(0, 3).map((item, index) => (
                 <tr key={index} className="trow">
                   <td className="d-flex align-items-center">
                     <img src={item.imageUrl} alt="product image" width={35} />
@@ -311,7 +324,10 @@ const Dashboard = () => {
                         <p>No low stock items found.</p>
                       ) : (
                         lowStockItems?.map((item, index) => (
-                          <div key={index} className="list-item">
+                          <div
+                            key={index}
+                            className="list-item on-hover rounded"
+                          >
                             <img
                               src={item.imageData}
                               alt={item.name}
@@ -322,7 +338,9 @@ const Dashboard = () => {
                               <h4>{item.name}</h4>
                               <p>Remaining Quantity: {item?.quantity}</p>
                             </div>
-                            <span className="item-status">Low</span>
+                            <span className="outOfStock py-1 px-2 rounded">
+                              Low
+                            </span>
                           </div>
                         ))
                       )}
@@ -336,7 +354,7 @@ const Dashboard = () => {
             {loading ? (
               <p>Loading...</p>
             ) : (
-              lowStockItems.map((item, index) => (
+              lowStockItems.slice(0, 3).map((item, index) => (
                 <div key={index} className="list-item">
                   <img
                     src={item.imageData || junk1}
@@ -347,7 +365,7 @@ const Dashboard = () => {
                     <h4>{item.name}</h4>
                     <p>Remaining Quantity: {item.quantity}</p>
                   </div>
-                  <span className="item-status">Low</span>
+                  <span className="py-1 px-3 rounded outOfStock">Low</span>
                 </div>
               ))
             )}
