@@ -1,19 +1,44 @@
-.on-hover:hover{
-    background-color: #eefaff;;
+.on-hover:hover {
+  background-color: #eefaff;
 }
 
 .outOfStock {
-   background-color:  #fadfe1;
-   color: red;
+  background-color: #fadfe1;
+  color: red;
 }
 
 .inStock {
-    background-color: #defce1;
-    color: green;
+  background-color: #defce1;
+  color: green;
 }
 
 .no-focus:focus {
-    outline: none; /* Removes the blue outline */
-    box-shadow: none; /* Removes the Bootstrap box-shadow */
-  }
-  
+  outline: none; 
+  box-shadow: none; 
+}
+
+.search-result {
+  width: 100%;
+  max-height: 40vh;
+  overflow: auto;
+  margin-top: 2.1em;
+  z-index: 10000;
+  background-color: #cecece;
+}
+
+.input-search {
+  width: 130%;
+}
+
+.custom-width {
+  width: 48%;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

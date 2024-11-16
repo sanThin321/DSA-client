@@ -28,7 +28,7 @@ const LoginPage = ({ onLogin }) => {
       if (response.status === 200) {
         const { token, user: userData } = response.data;
         storeToken(token);
-        localStorage.setItem("user", JSON.stringify(userData)); 
+        localStorage.setItem("user", JSON.stringify(userData));
 
         toast.success("Login successful.");
         navigate("/");
@@ -42,8 +42,8 @@ const LoginPage = ({ onLogin }) => {
         toast.error("Invalid username or password.");
       } else {
         toast.error("An error occurred. Please try again later.");
-      }
-    }
+      }
+    }
   };
 
   return (
@@ -58,7 +58,6 @@ const LoginPage = ({ onLogin }) => {
               Username
             </label>
             <input
-            
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}

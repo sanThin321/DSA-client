@@ -10,13 +10,10 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../auth/auth";
 import defaultImage from "../assets/image.gif";
-import loadingImage from "../assets/loadingdots2.gif";
 import formatDate from "../utils/FormateDate";
 import { useStore } from "../context/Store";
-import sale1 from "../assets/sale1.svg";
 import sale2 from "../assets/sale2.svg";
 import sale3 from "../assets/sale3.svg";
-import sale4 from "../assets/sale4.svg";
 import insale1 from "../assets/insale1.svg";
 
 const Inventory = () => {
@@ -36,7 +33,6 @@ const Inventory = () => {
   } = useStore();
   const navigate = useNavigate();
   const { authorizationToken } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedAvailability, setSelectedAvailability] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -51,6 +47,10 @@ const Inventory = () => {
   });
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [input, setInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [noResults, setNoResults] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -67,26 +67,36 @@ const Inventory = () => {
     }
   };
 
-  // Calculate current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // Filter products based on search term and availability filter
-  const filteredProducts = products
-    .filter((p) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((p) =>
-      selectedAvailability ? p.productAvailable === selectedAvailability : true
-    );
+  const currentDate = new Date();
 
-  // Get current page items after filtering
+  const filteredProducts = products.filter((product) => {
+    switch (selectedAvailability) {
+      case "":
+        return true;
+      case "Out of stock":
+        return product.quantity <= 0;
+      case "Low stock":
+        return product.quantity <= product.thresholdValue;
+      case "Expired": {
+        const [day, month, year] = product.expirationDate
+          .split("-")
+          .map(Number);
+        const productExpirationDate = new Date(year, month - 1, day);
+        return productExpirationDate < currentDate;
+      }
+      default:
+        return true;
+    }
+  });
+
   const currentItems = filteredProducts.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   const handleNextPage = () => {
@@ -106,7 +116,6 @@ const Inventory = () => {
   const closePopup = () => setPopupType(null);
 
   const isPopupOpen = popupType !== null;
-  const [color, setColor] = useState("gray");
 
   // add product
   const handleAddProduct = async (e) => {
@@ -169,6 +178,32 @@ const Inventory = () => {
     closePopup();
   };
 
+  const handleSearch = async (value) => {
+    setInput(value);
+    if (value.length >= 1) {
+      setShowSearchResults(true);
+      try {
+        const response = await axios.get(
+          `https://inventory-management-for-4sale-backend.onrender.com/api/product/search?query=${value}&sortBy=price`,
+          {
+            headers: {
+              Authorization: authorizationToken,
+            },
+          }
+        );
+        setSearchResults(response.data);
+        setNoResults(response.data.length === 0);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error searching:", error);
+      }
+    } else {
+      setShowSearchResults(false);
+      setSearchResults([]);
+      setNoResults(false);
+    }
+  };
+
   useEffect(() => {
     refreshProducts();
     refreshCategory();
@@ -179,7 +214,7 @@ const Inventory = () => {
   }, []);
 
   return (
-    <div style={{height: "100vh"}}>
+    <div style={{ height: "100vh" }}>
       <div className="incontainer">
         <div className="bg-white rounded p-3 d-flex justify-content-between align-items-center">
           <div className="d-flex gap-3">
@@ -243,7 +278,7 @@ const Inventory = () => {
                     title="Add New Product"
                     size="small"
                     content={
-                      <div style={{zIndex: "100"}}>
+                      <div style={{ zIndex: "100" }}>
                         <form onSubmit={handleAddProduct}>
                           <div className="product-field">
                             <label htmlFor="product" className="field-name">
@@ -384,13 +419,51 @@ const Inventory = () => {
                     hideCloseButton={true}
                   />
                 )}
-                <div className="d-flex align-items-center">
+                <div className="d-flex flex-column align-items-center position-relative">
                   <input
                     type="search"
                     placeholder="Search product..."
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => handleSearch(e.target.value)}
                     className="form-control form-control-sm no-focus"
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setSearchFocused(false)}
+                    aria-label="Search"
+                    value={input}
                   />
+                  {showSearchResults && (
+                    <ul className="list-group position-absolute search-result">
+                      {searchResults.length > 0
+                        ? searchResults.map((result) => (
+                            <li
+                              key={result.id}
+                              className="list-group-item list-group-item-action on-hover"
+                            >
+                              <NavLink
+                                to={`/inventory/${result.productId}`}
+                                style={{
+                                  textDecoration: "none",
+                                  color: "inherit",
+                                }}
+                                className="text-decoration-none text-dark"
+                              >
+                                <div className="d-flex align-items-center gap-3">
+                                  <img
+                                    src={result.imageData}
+                                    alt="product-image"
+                                    width={20}
+                                  />
+                                  <p className="mb-0">{result.name}</p>
+                                </div>
+                              </NavLink>
+                            </li>
+                          ))
+                        : noResults && (
+                            <li className="list-group-item text-muted text-center">
+                              No Product with such Name
+                            </li>
+                          )}
+                    </ul>
+                  )}
                 </div>
 
                 <span className="select">
@@ -403,10 +476,11 @@ const Inventory = () => {
                       className={`btn btn-sm border border-secondary dropdown-toggle ${
                         isPopupOpen ? "disable-dropdown-tog" : ""
                       }`}
-                      type="button "
+                      type="button"
                       id="filterDropdown"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
+                      style={{ width: "9.2em" }}
                     >
                       <img src={filter} alt="" className="image-filter" />
                       {selectedAvailability || "Filter"}
@@ -417,7 +491,7 @@ const Inventory = () => {
                     >
                       <li>
                         <button
-                          className="dropdown-item"
+                          className="dropdown-item on-hover"
                           onClick={() => setSelectedAvailability("")}
                         >
                           All
@@ -425,15 +499,7 @@ const Inventory = () => {
                       </li>
                       <li>
                         <button
-                          className="dropdown-item"
-                          onClick={() => setSelectedAvailability("In-stock")}
-                        >
-                          In-stock
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="dropdown-item"
+                          className="dropdown-item on-hover"
                           onClick={() =>
                             setSelectedAvailability("Out of stock")
                           }
@@ -443,10 +509,18 @@ const Inventory = () => {
                       </li>
                       <li>
                         <button
-                          className="dropdown-item"
+                          className="dropdown-item on-hover"
                           onClick={() => setSelectedAvailability("Low stock")}
                         >
                           Low stock
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item on-hover"
+                          onClick={() => setSelectedAvailability("Expired")}
+                        >
+                          Expired
                         </button>
                       </li>
                     </ul>
@@ -478,7 +552,6 @@ const Inventory = () => {
                     className="on-hover"
                   >
                     <td style={{ textAlign: "center" }}>
-                      {" "}
                       {/* Center the image */}
                       <div
                         style={{ display: "flex", justifyContent: "center" }}
@@ -518,11 +591,11 @@ const Inventory = () => {
                 ))
               ) : (
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <img src={loadingImage} height={200} />
+                  <td
+                    colSpan="7"
+                    style={{ textAlign: "center", padding: "20px" }}
+                  >
+                    <p>No products available.</p>
                   </td>
                 </tr>
               )}
