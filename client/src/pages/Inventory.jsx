@@ -149,7 +149,7 @@ const Inventory = () => {
 
     try {
       const request = await axios.post(
-        "http://localhost:8081/api/product",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/product",
         formData,
         {
           headers: {

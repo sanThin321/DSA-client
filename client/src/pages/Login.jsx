@@ -23,7 +23,7 @@ const LoginPage = ({ onLogin }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8081/login", user);
+      const response = await axios.post("https://inventory-management-for-4sale-backend.onrender.com/login", user);
 
       if (response.status === 200) {
         const { token, user: userData } = response.data;

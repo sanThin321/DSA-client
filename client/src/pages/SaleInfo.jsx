@@ -12,7 +12,7 @@ const SalesInfo = () => {
   const [salesDetail, setSalesDetail] = useState({});
 
   const getSalesDetails = async (id) => {
-    const res = await axios.get(`http://localhost:8081/api/sale/get/${id}`, {
+    const res = await axios.get(`https://inventory-management-for-4sale-backend.onrender.com/api/sale/get/${id}`, {
       headers: {
         Authorization: authorizationToken,
       },

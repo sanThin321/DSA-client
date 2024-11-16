@@ -125,7 +125,7 @@ const AddSales = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/api/sale/add",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/sale/add",
         saleData,
         {
           headers: {
