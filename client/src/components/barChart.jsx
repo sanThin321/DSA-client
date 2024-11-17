@@ -21,7 +21,7 @@ const BarChart = () => {
   const getBarData = async () => {
     try {
       const res = await axios.get(
-        `https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/category-revenue`,
+        `http://localhost:8081/api/stats/product/category-revenue`,
         {
           headers: {
             Authorization: authorizationToken,

@@ -42,3 +42,15 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.btn-hover:hover {
+  background-color: #0B5ED7;
+  color: white;
+}
+
+.image {
+  width: 100%; 
+  max-width: 400px; 
+  height: auto; 
+  object-fit: cover; 
+}

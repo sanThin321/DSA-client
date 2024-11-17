@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import edit_delete from "../assets/delete.svg";
+import { useNavigate, useParams } from "react-router-dom";
 import "./css/saleinfo.css";
 import axios from "axios";
 import { useAuth } from "../auth/auth";
@@ -10,9 +9,10 @@ const SalesInfo = () => {
   const { authorizationToken } = useAuth();
   const { id } = useParams();
   const [salesDetail, setSalesDetail] = useState({});
+  const navigate = useNavigate();
 
   const getSalesDetails = async (id) => {
-    const res = await axios.get(`https://inventory-management-for-4sale-backend.onrender.com/api/sale/get/${id}`, {
+    const res = await axios.get(`http://localhost:8081/api/sale/get/${id}`, {
       headers: {
         Authorization: authorizationToken,
       },
@@ -27,89 +27,155 @@ const SalesInfo = () => {
     getSalesDetails(id);
   }, [id]);
 
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8081/api/sale/delete/${id}`,
+        {
+          headers: { Authorization: authorizationToken },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Sale deleted successfully.");
+        navigate("/sales");
+      }
+    } catch (error) {
+      console.error("Failed to delete sale.");
+    }
+  };
+
   return (
-    <div>
-      <div className="saleInfo">
-        <h2 className="topic over">
-          Sale {id}
-          <span className="editCase">
-            <span className="edit">
-              <img src={edit_delete} alt="" className="image-icon" /> Delete
-            </span>
-            <span className="edit">Download</span>
-          </span>
-        </h2>
-        <div className="containerforoverview">
-          <h3 className="overviewT">Over View</h3>
-          <p className="hor"></p>
-          <div className="primaryDetails">
-            <div className="w-100">
-              <h4 className="prTopic">Primary Details</h4>
-              <li className="detail">
-                Customer Name
-                <span className="detailsValue">{salesDetail.customerName}</span>
-              </li>
-              <li className="detail">
-                Customer Contact No.
-                <span className="detailsValue">
-                  {salesDetail.contactNumber}
-                </span>
-              </li>
-              <li className="detail">
-                Date<span className="detailsValue">{salesDetail.saleDate}</span>
-              </li>
-              <li className="detail">
-                Total Amount BTN
-                <span className="detailsValue">{salesDetail.totalAmount}</span>
-              </li>
-              <li className="detail">
-                Journal Number
-                <span className="detailsValue">
-                  {salesDetail.journalNumber}
-                </span>
-              </li>
-              <br />
-              <h4 className="prTopic">Product Sold</h4>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Sold Quantity</th>
-                    <th>Total amount BTN</th>
+    <div className="bg-white p-3 rounded">
+      <div className="d-flex justify-content-between">
+        <h3 className="">{salesDetail.customerName}</h3>
+        <div className="gap-3 d-flex">
+          <button
+            className="btn border border-dark btn-hover"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      <hr />
+      <div className="row gap-5 p-3">
+        <div className="col-12 d-flex flex-row flex-lg-column justify-content-around justify-content-lg-start col-lg-4 border rounded p-3">
+          <div className="mb-0">
+            <div className="mb-4">
+              <p className="mb-0">Customer Name</p>
+              <h5>{salesDetail.customerName}</h5>
+            </div>
+            <div className="mb-4">
+              <p className="mb-0">Customer Contact No.</p>
+              <h5>{salesDetail.contactNumber}</h5>
+            </div>
+            <div className="mb-4">
+              <p className="mb-0">Date</p>
+              <h5>{salesDetail.saleDate}</h5>
+            </div>
+          </div>
+          <div>
+            <div className="mb-4">
+              <p className="mb-0">Total Amount BTN</p>
+              <h5>{salesDetail.totalAmount}</h5>
+            </div>
+            <div className="mb-4">
+              <p className="mb-0">Payment Method</p>
+              <h5> {salesDetail.paymentMethod}</h5>
+            </div>
+            {salesDetail.paymentMethod === "online" ? (
+              <div className="mb-4">
+                <p className="mb-0">Journal Number</p>
+                <h5>{salesDetail.journalNumber}</h5>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="col-12 col-lg-7 border rounded p-3">
+          <h5 className="mb-3">Product Sold</h5>
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Sold Quantity</th>
+                <th>Total amount BTN</th>
+              </tr>
+            </thead>
+            <tbody>
+              {salesDetail.sales &&
+                salesDetail.sales.map((item, index) => (
+                  <tr key={index} className="on-hover">
+                    <td style={{ textAlign: "center" }}>
+                      {" "}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <img
+                          src={item.product.imageData}
+                          loading="lazy"
+                          alt="Product"
+                          width={35}
+                          height={35}
+                        />
+                      </div>
+                    </td>
+                    <td>{item.product?.name}</td>
+                    <td>{item.product?.price}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.totalPrice}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {salesDetail.sales &&
-                    salesDetail.sales.map((item, index) => (
-                      <tr key={index}>
-                        <td style={{ textAlign: "center" }}>
-                          {" "}
-                          {/* Center the image */}
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <img
-                              src={item.product.imageData}
-                              loading="lazy"
-                              alt="Product"
-                              width={35}
-                              height={35}
-                            />
-                          </div>
-                        </td>
-                        <td>{item.product?.name}</td>
-                        <td>{item.product?.price}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.totalPrice}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Confirm Delete
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                Are you sure you want to delete this sale details? This action
+                cannot be undone.
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <button type="button" className="btn" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleDelete}
+                data-bs-dismiss="modal"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>

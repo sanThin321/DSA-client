@@ -20,7 +20,7 @@ export const StoreProvider = ({ children }) => {
   const getcategoriescount = async () => {
     try {
       const response = await axios.get(
-        "https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/category/count",
+        "http://localhost:8081/api/stats/product/category/count",
         {
           headers: {
             Authorization: authorizationToken,
@@ -43,7 +43,7 @@ export const StoreProvider = ({ children }) => {
   const getproductcount = async () => {
     try {
       const response = await axios.get(
-        "https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/count",
+        "http://localhost:8081/api/stats/product/count",
         {
           headers: {
             Authorization: authorizationToken,
@@ -66,7 +66,7 @@ export const StoreProvider = ({ children }) => {
     try {
       const today = getCurrentDate();
       const response = await axios.get(
-        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/revenue-by-date?saleDate=${today}`,
+        `http://localhost:8081/api/sale/revenue-by-date?saleDate=${today}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -86,7 +86,7 @@ export const StoreProvider = ({ children }) => {
     try {
       const today = getCurrentDate();
       const response = await axios.get(
-        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/sales-count-by-date?saleDate=${today}`,
+        `http://localhost:8081/api/sale/sales-count-by-date?saleDate=${today}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -106,7 +106,7 @@ export const StoreProvider = ({ children }) => {
     try {
 
       const response = await axios.get(
-        `https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/out-of-stock-count`,
+        `http://localhost:8081/api/stats/product/out-of-stock-count`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -137,7 +137,7 @@ export const StoreProvider = ({ children }) => {
 
   const getAllProducts = async () => {
     try {
-      const response = await axios.get("https://inventory-management-for-4sale-backend.onrender.com/api/products", {
+      const response = await axios.get("http://localhost:8081/api/products", {
         headers: {
           Authorization: authorizationToken,
         },
@@ -159,7 +159,7 @@ export const StoreProvider = ({ children }) => {
   // get categories
   const getCategories = async () => {
     try {
-      const response = await axios.get("https://inventory-management-for-4sale-backend.onrender.com/api/categories", {
+      const response = await axios.get("http://localhost:8081/api/categories", {
         headers: {
           Authorization: authorizationToken,
         },
@@ -180,7 +180,7 @@ export const StoreProvider = ({ children }) => {
   // get cateSales
   const getSales = async () => {
     try {
-      const response = await axios.get("https://inventory-management-for-4sale-backend.onrender.com/api/sale/all", {
+      const response = await axios.get("http://localhost:8081/api/sale/all", {
         headers: {
           Authorization: authorizationToken,
         },
@@ -201,7 +201,7 @@ export const StoreProvider = ({ children }) => {
   const fetchLowStockItems = async () => {
     try {
       const response = await axios.get(
-        "https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/low-stock",
+        "http://localhost:8081/api/stats/product/low-stock",
         {
           headers: {
             Authorization: authorizationToken,

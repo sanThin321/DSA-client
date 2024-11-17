@@ -191,7 +191,7 @@ const Settings = () => {
     const stored = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await axios.post(
-        `https://inventory-management-for-4sale-backend.onrender.com/change-username?email=${stored.email}&currentPassword=${currentPassword}&newUsername=${newUsername}`,
+        `http://localhost:8081/change-username?email=${stored.email}&currentPassword=${currentPassword}&newUsername=${newUsername}`,
         {
           username: newUsername,
           password: currentPassword,
@@ -221,7 +221,7 @@ const Settings = () => {
     const stored = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await axios.post(
-        `https://inventory-management-for-4sale-backend.onrender.com/change-email?currentEmail=${stored.email}&newEmail=${newEmail} &currentPassword=${currentPassword}`,
+        `http://localhost:8081/change-email?currentEmail=${stored.email}&newEmail=${newEmail} &currentPassword=${currentPassword}`,
         {
           email: newEmail,
           password: currentPassword,
@@ -251,7 +251,7 @@ const Settings = () => {
     console.log(stored.email);
     try {
       const response = await axios.post(
-        `https://inventory-management-for-4sale-backend.onrender.com/forgot-password?email=${stored.email}`
+        `http://localhost:8081/forgot-password?email=${stored.email}`
       );
       console.log(stored.email);
       if (response.status === 200) {
@@ -266,7 +266,7 @@ const Settings = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `https://inventory-management-for-4sale-backend.onrender.com/verify-code?code=${verificationCode}&email=${storedUser.email}`
+        `http://localhost:8081/verify-code?code=${verificationCode}&email=${storedUser.email}`
       );
       if (response.status === 200) {
         localStorage.setItem("code", verificationCode);
@@ -296,7 +296,7 @@ const Settings = () => {
 
     try {
       const response = await axios.post(
-        `https://inventory-management-for-4sale-backend.onrender.com/change-password`,
+        `http://localhost:8081/change-password`,
         null, // No request body; only query parameters are used
         {
           params: {

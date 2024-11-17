@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/inventory.css";
 import "./css/dashboard.css";
-import { FaSearch } from "react-icons/fa";
 import filter from "../assets/filter.svg";
 import Popup from "../components/popup";
 import { NavLink } from "react-router-dom";
@@ -141,24 +140,34 @@ const Inventory = () => {
       toast.error("Threshold value must be greater than 0!");
       return;
     }
+
     if (!product.expirationDate.trim()) {
       toast.error("Expiration date is required!");
       return;
     }
+
     if (!image) {
       toast.error("Product image is required!");
       return;
     }
+
+    const formattedDate = new Date(product.expirationDate)
+      .toLocaleDateString("en-GB")
+      .replace(/\//g, "-");
+
     const formData = new FormData();
     formData.append("imageFile", image);
     formData.append(
       "product",
-      new Blob([JSON.stringify(product)], { type: "application/json" })
+      new Blob(
+        [JSON.stringify({ ...product, expirationDate: formattedDate })],
+        { type: "application/json" }
+      )
     );
 
     try {
       const request = await axios.post(
-        "https://inventory-management-for-4sale-backend.onrender.com/api/product",
+        "http://localhost:8081/api/product",
         formData,
         {
           headers: {
@@ -184,7 +193,7 @@ const Inventory = () => {
       setShowSearchResults(true);
       try {
         const response = await axios.get(
-          `https://inventory-management-for-4sale-backend.onrender.com/api/product/search?query=${value}&sortBy=price`,
+          `http://localhost:8081/api/product/search?query=${value}`,
           {
             headers: {
               Authorization: authorizationToken,
@@ -211,7 +220,7 @@ const Inventory = () => {
     refreshOutOfStockCount();
     refreshLowStock();
     refreshTotalRevenue();
-  }, []);
+  }, [products]);
 
   return (
     <div style={{ height: "100vh" }}>
@@ -276,155 +285,171 @@ const Inventory = () => {
                     show={true}
                     onClose={closePopup}
                     title="Add New Product"
-                    size="small"
                     content={
-                      <div style={{ zIndex: "100" }}>
-                        <form onSubmit={handleAddProduct}>
-                          <div className="product-field">
-                            <label htmlFor="product" className="field-name">
-                              Product Name
-                            </label>
-                            <input
-                              name="name"
-                              value={product.name}
-                              type="text"
-                              placeholder="Enter product name"
-                              className="product-input"
-                              onChange={handleInputChange}
-                              autoComplete="off"
-                            />
-                          </div>
+                      <form
+                        onSubmit={handleAddProduct}
+                        className="add-product-form"
+                      >
+                        <div className="form-content d-flex justify-content-between flex-wrap">
+                          <div className="form-section">
+                            <div className="mb-3">
+                              <label htmlFor="product" className="form-label">
+                                Product Name
+                              </label>
+                              <input
+                                name="name"
+                                value={product.name}
+                                type="text"
+                                placeholder="Enter product name"
+                                className="form-control no-focus"
+                                onChange={handleInputChange}
+                                autoComplete="off"
+                              />
+                            </div>
 
-                          <div className="product-field">
-                            <label htmlFor="category" className="field-name">
-                              Category
-                            </label>
-                            <select
-                              className="product-input selectPlaceholder"
-                              value={product.category}
-                              onChange={handleInputChange}
-                              name="category"
-                              id="category"
-                            >
-                              <option value="">Select category</option>
-                              {categories.map((category) => {
-                                return (
-                                  <option value={category.name}>
-                                    {category.name}
+                            <div className="mb-3">
+                              <label htmlFor="category" className="form-label">
+                                Category
+                              </label>
+                              <select
+                                className="form-control no-focus"
+                                value={product.category}
+                                onChange={handleInputChange}
+                                name="category"
+                                id="category"
+                              >
+                                <option value="">Select category</option>
+                                {categories.length > 0 ? (
+                                  categories.map((category) => (
+                                    <option
+                                      key={category.name}
+                                      value={category.name}
+                                    >
+                                      {category.name}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option disabled>
+                                    Loading categories...
                                   </option>
-                                );
-                              })}
-                            </select>
+                                )}
+                              </select>
+                            </div>
+
+                            <div className="mb-3">
+                              <label htmlFor="buy" className="form-label">
+                                Buying Price
+                              </label>
+                              <input
+                                name="price"
+                                value={product.price}
+                                type="text"
+                                placeholder="Enter buying price"
+                                className="form-control no-focus"
+                                onChange={handleInputChange}
+                                autoComplete="off"
+                              />
+                            </div>
+
+                            <div className="mb-3">
+                              <label htmlFor="quantity" className="form-label">
+                                Quantity
+                              </label>
+                              <input
+                                name="quantity"
+                                value={product.quantity}
+                                type="text"
+                                placeholder="Enter product quantity"
+                                className="form-control no-focus"
+                                onChange={handleInputChange}
+                                autoComplete="off"
+                              />
+                            </div>
+
+                            <div className="mb-3">
+                              <label htmlFor="expire" className="form-label">
+                                Expiry Date
+                              </label>
+                              <input
+                                name="expirationDate"
+                                value={product.expirationDate}
+                                type="date"
+                                className="form-control no-focus"
+                                min={new Date().toISOString().split("T")[0]}
+                                onChange={handleInputChange}
+                              />
+                            </div>
+
+                            <div className="mb-3">
+                              <label htmlFor="threshold" className="form-label">
+                                Threshold Value
+                              </label>
+                              <input
+                                name="thresholdValue"
+                                type="number"
+                                value={product.thresholdValue}
+                                placeholder="Enter threshold value"
+                                className="form-control no-focus"
+                                onChange={handleInputChange}
+                              />
+                            </div>
                           </div>
 
-                          <div className="product-field">
-                            <label htmlFor="buy" className="field-name">
-                              Buying Price
-                            </label>
-                            <input
-                              name="price"
-                              value={product.price}
-                              type="text"
-                              placeholder="Enter buying price"
-                              className="product-input"
-                              onChange={handleInputChange}
-                              autoComplete="off"
-                            />
+                          <div className="image-section">
+                            <div className="image-upload mt-3">
+                              <input
+                                type="file"
+                                id="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                              />
+                              <label htmlFor="file" className="image-label">
+                                {previewUrl ? (
+                                  <img
+                                    id="preview"
+                                    src={previewUrl}
+                                    alt="Selected"
+                                    className="image-preview"
+                                  />
+                                ) : (
+                                  <img
+                                    src={defaultImage}
+                                    alt="Default"
+                                    className="image-preview"
+                                  />
+                                )}
+                              </label>
+                              <span className="img-des">Browse image</span>
+                            </div>
                           </div>
-                          <div className="product-field">
-                            <label htmlFor="quantity" className="field-name">
-                              Quantity
-                            </label>
-                            <input
-                              name="quantity"
-                              value={product.quantity}
-                              type="text"
-                              placeholder="Enter product quantity"
-                              className="product-input"
-                              onChange={handleInputChange}
-                              autoComplete="off"
-                            />
-                          </div>
-                          <div className="product-field">
-                            <label htmlFor="expire" className="field-name">
-                              Expiry Date
-                            </label>
-                            <input
-                              name="expirationDate"
-                              value={product.expirationDate}
-                              type="date"
-                              placeholder="Enter expiry date"
-                              className="product-input"
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <div className="product-field">
-                            <label htmlFor="threshold" className="field-name">
-                              Threshold Value
-                            </label>
-                            <input
-                              name="thresholdValue"
-                              type="number"
-                              value={product.thresholdValue}
-                              placeholder="Enter threshold value"
-                              className="product-input "
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <div className="Image-form">
-                            <input
-                              type="file"
-                              id="file"
-                              className="imagefile"
-                              accept="image/*"
-                              onChange={handleImageChange}
-                            />
-                            <label htmlFor="file" className="uploadImage">
-                              {previewUrl ? (
-                                <img
-                                  id="preview"
-                                  src={previewUrl}
-                                  alt="Selected"
-                                  className="fit-image"
-                                />
-                              ) : (
-                                <img
-                                  src={defaultImage}
-                                  alt="Default"
-                                  className="fit-image"
-                                /> // Use the imported default image
-                              )}
-                            </label>
-                            <span className="img-des">Browse image</span>
-                          </div>
-
-                          <div className="Return">
-                            <button
-                              className="btn btn-sm"
-                              type="cancel"
-                              onClick={closePopup}
-                            >
-                              Discard
-                            </button>
-                            <button
-                              className="btn btn-sm btn-primary"
-                              type="submit"
-                            >
-                              Add Product
-                            </button>
-                          </div>
-                        </form>
-                      </div>
+                        </div>
+                        <hr />
+                        <div className="form-footer d-flex justify-content-end">
+                          <button
+                            className="btn me-2 btn-sm"
+                            type="button"
+                            onClick={closePopup}
+                          >
+                            Discard
+                          </button>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            type="submit"
+                          >
+                            Add Product
+                          </button>
+                        </div>
+                      </form>
                     }
-                    hideCloseButton={true}
                   />
                 )}
+
                 <div className="d-flex flex-column align-items-center position-relative">
                   <input
                     type="search"
                     placeholder="Search product..."
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="form-control form-control-sm no-focus"
+                    className="form-control no-focus text-dark"
                     onFocus={() => setSearchFocused(true)}
                     onBlur={() => setSearchFocused(false)}
                     aria-label="Search"
@@ -473,7 +498,7 @@ const Inventory = () => {
                     }`}
                   >
                     <button
-                      className={`btn btn-sm border border-secondary dropdown-toggle ${
+                      className={`btn border border-secondary dropdown-toggle ${
                         isPopupOpen ? "disable-dropdown-tog" : ""
                       }`}
                       type="button"
@@ -552,7 +577,6 @@ const Inventory = () => {
                     className="on-hover"
                   >
                     <td style={{ textAlign: "center" }}>
-                      {/* Center the image */}
                       <div
                         style={{ display: "flex", justifyContent: "center" }}
                       >
@@ -615,7 +639,7 @@ const Inventory = () => {
               Page {currentPage} of {totalPages}{" "}
             </span>
             <button
-              className="btn btn-sm"
+              className="btn btn-sm border border-dark"
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
             >
