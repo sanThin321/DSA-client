@@ -362,6 +362,7 @@ const AddSales = () => {
                     onChange={handleSaleChange}
                     min="1"
                     max={selectedProduct ? selectedProduct.quantity : 0}
+                    autoComplete="off"
                   />
                 </td>
                 <td>{selectedProduct ? selectedProduct.price : sale.price}</td>
@@ -385,7 +386,7 @@ const AddSales = () => {
             <p>Net Total Amount BTN: {calculateNetTotal()}</p>
           </div>
 
-          <div className="payment-method ">
+          <div className="payment-method">
             <select
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
