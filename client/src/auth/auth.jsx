@@ -8,8 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const [isLoading, setIsLoading] = useState(true);
   const authorizationToken = token ? `Bearer ${token}` : "";
-  const [userRole, setUserRole] = useState("")
-  const [user, setUser] = useState("")
+
 
   const storeToken = (serverToken) => {
     localStorage.setItem("token", serverToken);

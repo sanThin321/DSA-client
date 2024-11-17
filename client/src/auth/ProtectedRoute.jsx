@@ -4,7 +4,7 @@ import { useAuth } from "./auth";
 const ProtectedRoute = () => {
   const { isLoggedIn } = useAuth(); 
 
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" />; 
+  return isLoggedIn ? <Outlet /> : <Navigate to="/" />; 
 };
 
 export default ProtectedRoute;
