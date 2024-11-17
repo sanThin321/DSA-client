@@ -73,7 +73,7 @@ const Sales = () => {
       setShowSearchResults(true);
       try {
         const response = await axios.get(
-          `https://inventory-management-for-4sale-backend.onrender.com/api/sale/search?query=${value}`,
+          `http://localhost:8081/api/sale/search?query=${value}`,
           {
             headers: {
               Authorization: authorizationToken,
@@ -168,7 +168,7 @@ const Sales = () => {
                 type="search"
                 placeholder="Search product..."
                 onChange={(e) => handleSearch(e.target.value)}
-                className="form-control form-control-sm no-focus"
+                className="form-control no-focus"
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 aria-label="Search"
@@ -209,7 +209,7 @@ const Sales = () => {
                 className={`dropdown ${isPopupOpen ? "disable-dropdown" : ""}`}
               >
                 <button
-                  className={`btn btn-sm border border-secondary dropdown-toggle ${
+                  className={`btn border border-secondary dropdown-toggle ${
                     isPopupOpen ? "disable-dropdown-tog" : ""
                   }`}
                   type="button"

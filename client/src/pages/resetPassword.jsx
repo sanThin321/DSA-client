@@ -27,7 +27,7 @@ const ResetPassword = () => {
       const email = localStorage.getItem("email")
       const code = localStorage.getItem("code")
 
-      const request = await axios.post(`https://inventory-management-for-4sale-backend.onrender.com/reset-password?email=${email}&code=${code}&newPassword=${password}`);
+      const request = await axios.post(`http://localhost:8081/reset-password?email=${email}&code=${code}&newPassword=${password}`);
 
       if (request.status === 200) {
         toast.success("Password reset successful.");

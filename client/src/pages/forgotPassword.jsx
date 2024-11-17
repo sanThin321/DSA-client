@@ -20,7 +20,7 @@ const ForgotPassword = () => {
 
     try {
         const response = await axios.post(
-            `https://inventory-management-for-4sale-backend.onrender.com/forgot-password?email=${normalizedEmail}`
+            `http://localhost:8081/forgot-password?email=${normalizedEmail}`
         );
 
         if (response.status === 200) {
