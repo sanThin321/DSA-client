@@ -51,7 +51,6 @@ const Reports = () => {
         setData(res.data.products);
       }
 
-      console.log("highest: ", data);
     } catch (error) {
       console.error("Error fetching low stock products: ", error);
     }
