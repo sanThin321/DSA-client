@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       setIsLoading(false);
     }
-    console.log(user)
   }, [token]);
 
   return (
@@ -40,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         LogoutUser,
         isLoading,
-        user
       }}
     >
       {children}
