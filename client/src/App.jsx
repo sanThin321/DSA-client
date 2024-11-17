@@ -17,7 +17,7 @@ import PageNotFound from "./pages/PageNotFound"; // Import the 404 page
 
 const Layout = () => {
   const location = useLocation();
-  const noSidebarRoutes = ["/login", "/forgotpassword", "/validcode", "/resetpassword"];
+  const noSidebarRoutes = ["/", "/forgotpassword", "/validcode", "/resetpassword"];
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
 
   return (
