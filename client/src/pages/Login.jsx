@@ -31,7 +31,7 @@ const LoginPage = ({ onLogin }) => {
         localStorage.setItem("user", JSON.stringify(userData));
 
         toast.success("Login successful.");
-        navigate("/");
+        navigate("/dashboard");
 
         if (onLogin) {
           onLogin(userData);

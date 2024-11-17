@@ -27,7 +27,7 @@ const Layout = () => {
           <Routes>
             {/* Routes that should always be accessible */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/inventory/:id" element={<InventroryDetail />} />
               <Route path="/reports" element={<Reports />} />
@@ -42,7 +42,7 @@ const Layout = () => {
         </Sidebar>
       ) : (
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/validcode" element={<Valid />} />
           <Route path="/resetpassword" element={<ResetPassword />} />

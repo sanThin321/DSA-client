@@ -25,7 +25,7 @@ const Sidebar = ({ children }) => {
 
   const primaryMenu = [
     {
-      path: "/",
+      path: "/dashboard",
       name: "Dashboard",
       icon: <FaTh />,
     },
