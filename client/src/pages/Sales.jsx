@@ -73,7 +73,7 @@ const Sales = () => {
       setShowSearchResults(true);
       try {
         const response = await axios.get(
-          `http://localhost:8081/api/sale/search?query=${value}`,
+          `https://inventory-management-for-4sale-backend.onrender.com/api/sale/search?query=${value}`,
           {
             headers: {
               Authorization: authorizationToken,

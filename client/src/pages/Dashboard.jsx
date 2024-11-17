@@ -32,7 +32,7 @@ const Dashboard = () => {
   const getLowStockProducts = async (date) => {
     try {
       const res = await axios.get(
-        `http://localhost:8081/api/sale/top-selling-products-by-date/${date}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/top-selling-products-by-date/${date}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -54,7 +54,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:8081/api/stats/product/low-stock",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/low-stock",
         {
           headers: {
             Authorization: authorizationToken,
@@ -74,7 +74,7 @@ const Dashboard = () => {
   const handleDelete = async () => {
     try {
       const request = await axios.delete(
-        `http://localhost:8081/api/category/${categoryId}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/category/${categoryId}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -132,7 +132,7 @@ const Dashboard = () => {
 
     try {
       const request = await axios.post(
-        "http://localhost:8081/api/addCategory",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/addCategory",
         category,
         {
           headers: {

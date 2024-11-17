@@ -12,7 +12,7 @@ const SalesInfo = () => {
   const navigate = useNavigate();
 
   const getSalesDetails = async (id) => {
-    const res = await axios.get(`http://localhost:8081/api/sale/get/${id}`, {
+    const res = await axios.get(`https://inventory-management-for-4sale-backend.onrender.com/api/sale/get/${id}`, {
       headers: {
         Authorization: authorizationToken,
       },
@@ -30,7 +30,7 @@ const SalesInfo = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8081/api/sale/delete/${id}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/delete/${id}`,
         {
           headers: { Authorization: authorizationToken },
         }

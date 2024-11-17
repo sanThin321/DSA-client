@@ -25,7 +25,7 @@ const ProductDetail = () => {
   const getProduct = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8081/api/product/${id}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/product/${id}`,
         {
           headers: { Authorization: authorizationToken },
         }
@@ -110,7 +110,7 @@ const ProductDetail = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8081/api/product/${id}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/product/${id}`,
         formData,
         {
           headers: {
@@ -132,7 +132,7 @@ const ProductDetail = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8081/api/product/${id}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/product/${id}`,
         {
           headers: { Authorization: authorizationToken },
         }

@@ -167,7 +167,7 @@ const Inventory = () => {
 
     try {
       const request = await axios.post(
-        "http://localhost:8081/api/product",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/product",
         formData,
         {
           headers: {
@@ -193,7 +193,7 @@ const Inventory = () => {
       setShowSearchResults(true);
       try {
         const response = await axios.get(
-          `http://localhost:8081/api/product/search?query=${value}`,
+          `https://inventory-management-for-4sale-backend.onrender.com/api/product/search?query=${value}`,
           {
             headers: {
               Authorization: authorizationToken,

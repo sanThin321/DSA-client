@@ -125,7 +125,7 @@ const AddSales = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/api/sale/add",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/sale/add",
         saleData,
         {
           headers: {
@@ -144,9 +144,7 @@ const AddSales = () => {
     }
   };
 
-  // useEffect(() => {
-  //   refreshProducts();
-  // }, [refreshProducts]);
+
 
   useEffect(() => {
     refreshProducts();
@@ -343,11 +341,16 @@ const AddSales = () => {
                     }}
                   >
                     <option value="">Select Product</option>
-                    {products.map((product) => (
-                      <option key={product.productId} value={product.productId}>
-                        {product.name}
-                      </option>
-                    ))}
+                    {products
+                      .filter((product) => product.quantity > 0)
+                      .map((product) => (
+                        <option
+                          key={product.productId}
+                          value={product.productId}
+                        >
+                          {product.name}
+                        </option>
+                      ))}
                   </select>
                 </td>
                 <td>
@@ -358,6 +361,7 @@ const AddSales = () => {
                     name="quantity"
                     onChange={handleSaleChange}
                     min="1"
+                    max={selectedProduct ? selectedProduct.quantity : 0}
                   />
                 </td>
                 <td>{selectedProduct ? selectedProduct.price : sale.price}</td>
@@ -378,7 +382,7 @@ const AddSales = () => {
 
         <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
           <div className="net-total">
-            <p >Net Total Amount BTN: {calculateNetTotal()}</p>
+            <p>Net Total Amount BTN: {calculateNetTotal()}</p>
           </div>
 
           <div className="payment-method ">
