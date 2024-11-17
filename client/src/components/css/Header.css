@@ -48,6 +48,7 @@
     padding: 20px;
     background-color: #F0F1F3;
     overflow-y: auto;
+    height: 100vh;
 }
 
 .link {

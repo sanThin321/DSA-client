@@ -8,8 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const [isLoading, setIsLoading] = useState(true);
   const authorizationToken = token ? `Bearer ${token}` : "";
-  const [userRole, setUserRole] = useState("")
-  const [user, setUser] = useState("")
+
 
   const storeToken = (serverToken) => {
     localStorage.setItem("token", serverToken);
@@ -30,7 +29,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       setIsLoading(false);
     }
-    console.log(user)
   }, [token]);
 
   return (
@@ -41,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         LogoutUser,
         isLoading,
-        user
       }}
     >
       {children}

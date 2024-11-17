@@ -7,10 +7,13 @@ import { useStore } from "../context/Store";
 import sale1 from "../assets/sale1.svg";
 import sale2 from "../assets/sale2.svg";
 import sale3 from "../assets/sale3.svg";
-import sale4 from "../assets/sale4.svg";
 import insale1 from "../assets/insale1.svg";
+import axios from "axios";
+import { useAuth } from "../auth/auth";
 
 const Sales = () => {
+  const { authorizationToken } = useAuth();
+
   const {
     sales,
     refreshSales,
@@ -23,57 +26,40 @@ const Sales = () => {
     salesCount,
     refreshTotalRevenue,
   } = useStore();
-
-  //  const sales = [
-  //     {
-  //       id: 213,
-  //       customername: "Sangay Thinley",
-  //       customercontact: 77615421,
-  //       payment:"Credit card",
-  //       amount: 500,
-  //       date: "11/12/22",
-  //       jrnl: 3444386,
-  //     },
-  //     {
-  //       id: 214,
-  //       customername: "Tenzin Wangchuk",
-  //       customercontact: 77615422,
-  //       payment:"Credit card",
-  //       amount: 700,
-  //       date: "12/12/22",
-  //       jrnl: 3444387,
-  //     },
-  //   ];
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedColumn, setSelectedColumn] = useState("");
+  const [selectedAvailability, setSelectedAvailability] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredProducts = sales.filter((product) => {
-    if (selectedColumn === "") {
-      // Apply the filter to all columns
-      return Object.values(product).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    } else {
-      // Apply the filter to the selected column
-      const valueToFilter = product[selectedColumn].toString().toLowerCase();
-      return valueToFilter.includes(searchTerm.toLowerCase());
-    }
+
+  const [date, setDate] = useState(null);
+
+  const filteredSales = sales.filter((sale) => {
+    const paymentFilter =
+      selectedAvailability === ""
+        ? true
+        : sale.paymentMethod.toLowerCase() ===
+          selectedAvailability.toLowerCase();
+    const dateFilter = date ? sale.saleDate === date : true;
+
+    return paymentFilter && dateFilter;
   });
 
-  const currentItems = filteredProducts.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const [input, setInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [noResults, setNoResults] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentItems = filteredSales.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredSales.length / itemsPerPage);
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
+  const [popupType, setPopupType] = useState(null);
+  const isPopupOpen = popupType !== null;
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -81,14 +67,29 @@ const Sales = () => {
     }
   };
 
-  const columnMapping = {
-    "": "Filter",
-    id: "Sale Id",
-    customername: "Name",
-    customercontact: "Contact No",
-    amount: "Total Amount",
-    date: "Date",
-    jrnl: "Journal No",
+  const handleSearch = async (value) => {
+    setInput(value);
+    if (value.length >= 1) {
+      setShowSearchResults(true);
+      try {
+        const response = await axios.get(
+          `https://inventory-management-for-4sale-backend.onrender.com/api/sale/search?query=${value}`,
+          {
+            headers: {
+              Authorization: authorizationToken,
+            },
+          }
+        );
+        setSearchResults(response.data);
+        setNoResults(response.data.length === 0);
+      } catch (error) {
+        console.error("Error searching:", error);
+      }
+    } else {
+      setShowSearchResults(false);
+      setSearchResults([]);
+      setNoResults(false);
+    }
   };
 
   useEffect(() => {
@@ -161,45 +162,107 @@ const Sales = () => {
               </NavLink>
             </button>
 
-            <div className="d-flex align-items-center">
+            <div className="d-flex flex-column align-items-center position-relative">
               <input
                 type="search"
-                placeholder="Search sales..."
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-control form-control-sm no-focus"
+                placeholder="Search product..."
+                onChange={(e) => handleSearch(e.target.value)}
+                className="form-control no-focus"
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                aria-label="Search"
+                value={input}
               />
+              {showSearchResults && (
+                <ul className="list-group position-absolute search-result">
+                  {searchResults.length > 0
+                    ? searchResults.map((result) => (
+                        <li
+                          key={result.id}
+                          className="list-group-item list-group-item-action on-hover"
+                        >
+                          <NavLink
+                            to={`/inventory/${result.productId}`}
+                            style={{
+                              textDecoration: "none",
+                              color: "inherit",
+                            }}
+                            className="text-decoration-none text-dark"
+                          >
+                            <div className="d-flex align-items-center gap-3">
+                              <p className="mb-0">{result.customerName}</p>
+                            </div>
+                          </NavLink>
+                        </li>
+                      ))
+                    : noResults && (
+                        <li className="list-group-item text-muted text-center">
+                          No sale with such customer name
+                        </li>
+                      )}
+                </ul>
+              )}
             </div>
             <span className="select">
-              <div className="dropdown">
+              <div
+                className={`dropdown ${isPopupOpen ? "disable-dropdown" : ""}`}
+              >
                 <button
-                  className="btn btn-sm border-dark dropdown-toggle"
+                  className={`btn border border-secondary dropdown-toggle ${
+                    isPopupOpen ? "disable-dropdown-tog" : ""
+                  }`}
                   type="button"
-                  id="dropdownMenuButton"
+                  id="filterDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  style={{ width: "9.2em" }}
                 >
-                  <img
-                    src={filter}
-                    alt=""
-                    className="me-2"
-                    style={{ width: "16px", height: "16px" }}
-                  />
-                  {columnMapping[selectedColumn]}
+                  <img src={filter} alt="Filter" className="image-filter" />
+                  {selectedAvailability || (date ? `Date: ${date}` : "Filter")}
                 </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton"
-                >
-                  {Object.keys(columnMapping).map((key) => (
-                    <li key={key}>
-                      <button
-                        className="dropdown-item"
-                        onClick={() => setSelectedColumn(key)}
-                      >
-                        {columnMapping[key]}
-                      </button>
-                    </li>
-                  ))}
+                <ul className="dropdown-menu" aria-labelledby="filterDropdown">
+                  <li className="px-3 py-2">
+                    <label htmlFor="dateFilter" className="form-label">
+                      Filter by Date:
+                    </label>
+                    <input
+                      type="date"
+                      id="dateFilter"
+                      className="form-control"
+                      onChange={(e) => setDate(e.target.value)}
+                      value={date || ""}
+                    />
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item on-hover"
+                      onClick={() => {
+                        setSelectedAvailability("");
+                        setDate(null);
+                      }}
+                    >
+                      All
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item on-hover"
+                      onClick={() => setSelectedAvailability("Cash")}
+                    >
+                      Cash
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item on-hover"
+                      onClick={() => setSelectedAvailability("Online")}
+                    >
+                      Online
+                    </button>
+                  </li>
                 </ul>
               </div>
             </span>
@@ -209,10 +272,9 @@ const Sales = () => {
         <table>
           <thead className="head">
             <tr>
-              <th>Sale Id</th>
+              <th>Sale</th>
               <th>Customer Name</th>
               <th>Customer Contact No</th>
-
               <th>Total Amount BTN</th>
               <th>Date</th>
               <th>Payment Method</th>
@@ -287,14 +349,18 @@ const Sales = () => {
                       to={`/sales/${sale.saleId}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      {sale.journalNumber}
+                      {sale.journalNumber ? (
+                        <p className="mb-0">{sale.journalNumber}</p>
+                      ) : (
+                        <p className="mb-0">-</p>
+                      )}
                     </NavLink>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6">No products found</td>
+                <td colSpan="6">No sales found</td>
               </tr>
             )}
           </tbody>

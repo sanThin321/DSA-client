@@ -17,7 +17,7 @@ const ProfitAndRevenueChart = () => {
   const [data, setData] = useState([]);
 
   const chartData = async () => {
-    const res = await axios.get("http://localhost:8081/api/sale/sale-stats/monthly", {
+    const res = await axios.get("https://inventory-management-for-4sale-backend.onrender.com/api/sale/sale-stats/monthly", {
       headers: {
         Authorization: authorizationToken,
       },

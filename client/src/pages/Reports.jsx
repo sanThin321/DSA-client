@@ -39,7 +39,7 @@ const Reports = () => {
   const getBestSellingProducts = async (date) => {
     try {
       const res = await axios.get(
-        `http://localhost:8081/api/sale/top-selling-products-by-date/${date}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/top-selling-products-by-date/${date}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -51,7 +51,6 @@ const Reports = () => {
         setData(res.data.products);
       }
 
-      console.log("highest: ", data);
     } catch (error) {
       console.error("Error fetching low stock products: ", error);
     }

@@ -19,7 +19,7 @@ const Valid = () => {
 
     try {
       const email = localStorage.getItem("email")
-      const request = await axios.post(`http://localhost:8081/verify-code?email=${email}&code=${ code }`);
+      const request = await axios.post(`https://inventory-management-for-4sale-backend.onrender.com/verify-code?email=${email}&code=${ code }`);
 
       if (request.status === 200) {
         localStorage.setItem("code", code)

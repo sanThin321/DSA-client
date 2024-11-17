@@ -25,7 +25,7 @@ const Sidebar = ({ children }) => {
 
   const primaryMenu = [
     {
-      path: "/",
+      path: "/dashboard",
       name: "Dashboard",
       icon: <FaTh />,
     },
@@ -73,7 +73,6 @@ const Sidebar = ({ children }) => {
         </div>
         <hr className="mt-0"/>
 
-        {/* Primary Menu */}
         <div className="menu-section">
           {primaryMenu.map((item, index) => (
             <NavLink
@@ -146,7 +145,7 @@ const Sidebar = ({ children }) => {
         </div>
 
         {/* Main content area */}
-        <div className="page-content">{children}</div>
+        <div className="page-content" >{children}</div>
       </div>
     </div>
   );

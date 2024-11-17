@@ -154,15 +154,16 @@
     cursor: pointer; /* Change cursor on hover */
 }
 .uploadImage {
-    height: 100px;
-    width: 100px;
+    height: 200px;
+    width: 200px;
     border-radius: 6px;
     border: 1px dashed gray;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     overflow: hidden;
     cursor: pointer;
+    object-fit: fill;
 }
 
 #preview {
@@ -230,3 +231,82 @@
 .on-hover:hover{
     background-color: #eefaff;;
 }
+
+.edit-product-form {
+    max-width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+  }
+  
+  .form-content {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .form-section {
+    flex: 1;
+  }
+  
+  .image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .image-upload input[type="file"] {
+    display: none;
+  }
+  
+  .image-label {
+    border: 2px dashed #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .image-label:hover {
+    border-color: #007bff;
+  }
+  
+  .image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .form-footer .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+  

@@ -28,11 +28,11 @@ const Dashboard = () => {
   const [lowStockItems, setLowStockItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-
+  const [categoryId, setCategoryId] = useState(0);
   const getLowStockProducts = async (date) => {
     try {
       const res = await axios.get(
-        `http://localhost:8081/api/sale/top-selling-products-by-date/${date}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/sale/top-selling-products-by-date/${date}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -54,7 +54,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:8081/api/stats/product/low-stock",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/stats/product/low-stock",
         {
           headers: {
             Authorization: authorizationToken,
@@ -71,10 +71,10 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
       const request = await axios.delete(
-        `http://localhost:8081/api/category/${id}`,
+        `https://inventory-management-for-4sale-backend.onrender.com/api/category/${categoryId}`,
         {
           headers: {
             Authorization: authorizationToken,
@@ -132,7 +132,7 @@ const Dashboard = () => {
 
     try {
       const request = await axios.post(
-        "http://localhost:8081/api/addCategory",
+        "https://inventory-management-for-4sale-backend.onrender.com/api/addCategory",
         category,
         {
           headers: {
@@ -144,14 +144,11 @@ const Dashboard = () => {
       if (request.status === 201) {
         toast.success("Category added successfully.");
         setNewCategory("");
-        closePopup();
         refreshCategory();
       }
     } catch (error) {
       toast.error("Category already exists.");
       setNewCategory("");
-      closePopup();
-      // toast.error(error.message);
     }
   };
 
@@ -229,13 +226,17 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="grid-item item1">
-          <h2 className={`topic ${isPopupOpen ? "" : "Scroll"}`}>
-            Top Selling Products{" "}
-            <span className="span" onClick={() => openPopup("TopSStock")}>
+        <div className="bg-white p-3 rounded">
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h5>Top Selling Products </h5>
+            <button
+              className="btn btn-sm"
+              onClick={() => openPopup("TopSStock")}
+            >
               see all
-            </span>
-          </h2>
+            </button>
+          </div>
+
           {popupType === "TopSStock" && (
             <Popup
               show={true}
@@ -302,13 +303,17 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
-        <div className="grid-item item2">
-          <h2 className={`topic ${isPopupOpen ? "" : "Scroll"}`}>
-            Low Quantity Products{" "}
-            <span className="span" onClick={() => openPopup("lowQStock")}>
+        <div className="bg-white p-3 rounded">
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h5>Low Quantity Products </h5>
+            <button
+              className="btn btn-sm"
+              onClick={() => openPopup("lowQStock")}
+            >
               see all
-            </span>
-          </h2>
+            </button>
+          </div>
+
           {popupType === "lowQStock" && (
             <Popup
               show={true}
@@ -371,62 +376,28 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <div className="grid-item item3 p-1 px-3">
+        <div className="bg-white p-3 rounded">
           <h2 className={`topic graph ${isPopupOpen ? "" : "Scroll"} mb-0`}>
             Total Sale & Revenue
           </h2>
           <BarChart />
         </div>
-        <div className="grid-item item4 p-2 px-3">
-          <h2 className={`topic Button ${isPopupOpen ? "" : "Scroll"}`}>
-            Category{" "}
+        <div className="p-2 px-3 bg-white rounded">
+          <div className="d-flex justify-content-between py-2">
+            <h5>Category </h5>
             <button
               className="btn btn-primary p-1 px-2 addButton"
-              onClick={() => openPopup("addCategory")}
+              data-bs-toggle="modal"
+              data-bs-target="#addCategoryModal"
             >
               Add Category
             </button>
-          </h2>
-          {popupType === "addCategory" && (
-            <Popup
-              show={true}
-              onClose={closePopup}
-              title="New Category"
-              size="small"
-              content={
-                <div>
-                  <form onSubmit={handleAddCategory}>
-                    <div className="form">
-                      <label className="label">Category Name</label>
-                      <input
-                        type="text"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        placeholder="Enter category name"
-                        required
-                        className="input"
-                      />
-                    </div>
-                    <div className="Return">
-                      <button
-                        className="send cancel re"
-                        type="cancel"
-                        onClick={closePopup}
-                      >
-                        Discard
-                      </button>
-                      <button className="send add re" type="submit">
-                        Add Category
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              }
-              hideCloseButton={true}
-            />
-          )}
+          </div>
 
-          <ul className="category-list">
+          <ul
+            className="category-list"
+            style={{ maxHeight: "25em", height: "100%", overflowX: "auto" }}
+          >
             {categories.length === 0 ? (
               <li className="placeholder-container">
                 <span className="placeHolder">Add Categories</span>
@@ -438,8 +409,10 @@ const Dashboard = () => {
                   <div className="category-item">
                     <span>{category.name}</span>
                     <span
-                      onClick={() => handleDelete(category.categoryId)}
+                      onClick={() => setCategoryId(category.categoryId)}
                       className="delete-Button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
                     >
                       Delete
                     </span>
@@ -448,6 +421,103 @@ const Dashboard = () => {
               ))
             )}
           </ul>
+        </div>
+      </div>
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Confirm Delete
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              <h5>
+                Are you sure you want to delete this category? This action
+                cannot be undone.
+              </h5>
+            </div>
+
+            <div className="modal-footer">
+              <button type="button" className="btn" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleDelete}
+                data-bs-dismiss="modal"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="modal fade"
+        id="addCategoryModal"
+        tabIndex="-1"
+        aria-labelledby="addCategoryModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="addCategoryModalLabel">
+                New Category
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              <form onSubmit={handleAddCategory}>
+                <div>
+                  <label className="label mb-1">Category Name</label>
+                  <input
+                    type="text"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    placeholder="Enter category name"
+                    required
+                    className="form-control no-focus"
+                  />
+                </div>
+
+                <div className="Return mt-4">
+                  <button className="btn" type="button" data-bs-dismiss="modal">
+                    Discard
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    data-bs-dismiss="modal"
+                  >
+                    Add
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
